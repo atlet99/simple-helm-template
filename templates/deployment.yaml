@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "default-app.fullname" . }}
+  namespace: {{ include "default-app.namespace" . }}
+  labels:
+    {{- $labels := include "default-app.labels" . -}}
+    {{- if $labels -}}
+      {{- $labels | nindent 8 }}
+    {{- end }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "default-app.selectorLabels" . | indent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "default-app.labels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "default-app.serviceAccountName" . }}
+      {{- with .Values.podSecurityContext }}
+      securityContext:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: {{ .Release.Name }}
+          {{- if .Values.podSecurityContext }}
+          securityContext:
+            {{- toYaml .Values.podSecurityContext | nindent 12 }}
+          {{- end }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            {{- if .Values.service.ports }}
+            {{- range $index, $port := .Values.service.ports }}
+              - name: {{ $port.name | default (printf "port-%d" $index) }}
+                containerPort: {{ $port.targetPort | default $port.port }}
+                protocol: {{ $port.protocol | default "TCP" }}
+            {{- end }}
+            {{- else }}
+              - name: default-port
+                containerPort: 80
+                protocol: TCP
+            {{- end }}
+          {{- with .Values.livenessProbe }}
+          livenessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.readinessProbe }}
+          readinessProbe:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- if .Values.persistent.enabled }}
+          volumeMounts:
+            - name: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
+              mountPath: {{ .Values.persistent.mountPath }}
+              readOnly: {{ .Values.persistent.readOnly }}
+          {{- end }}
+      priorityClassName: {{ .Values.priorityClassName | default "" }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default "30" }}
+      {{- if .Values.persistent.enabled }}
+      volumes:
+        - name: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+

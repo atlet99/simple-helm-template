@@ -1,0 +1,52 @@
+{{- if .Values.autoscaling.enabled }}
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: {{ include "default-app.fullname" . }}
+  namespace: {{ include "default-app.namespace" . }}
+  labels:
+    {{- include "default-app.labels" . | nindent 4 }}
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: {{ include "default-app.fullname" . }}
+  minReplicas: {{ .Values.autoscaling.minReplicas }}
+  maxReplicas: {{ .Values.autoscaling.maxReplicas }}
+  metrics:
+    {{- range .Values.autoscaling.metrics }}
+    - type: {{ .type }}
+      {{- if eq .type "Resource" }}
+      resource:
+        name: {{ .resource.name }}
+        target:
+          {{- if .resource.targetAverageUtilization }}
+          type: Utilization
+          averageUtilization: {{ .resource.targetAverageUtilization }}
+          {{- end }}
+          {{- if .resource.targetAverageValue }}
+          type: Value
+          averageValue: {{ .resource.targetAverageValue }}
+          {{- end }}
+      {{- end }}
+      {{- if eq .type "Pods" }}
+      pods:
+        metric:
+          name: {{ .pods.metric.name }}
+        target:
+          averageValue: {{ .pods.target.averageValue }}
+      {{- end }}
+      {{- if eq .type "External" }}
+      external:
+        metric:
+          name: {{ .external.metric.name }}
+        target:
+          {{- if .external.targetAverageValue }}
+          averageValue: {{ .external.targetAverageValue }}
+          {{- end }}
+          {{- if .external.targetValue }}
+          value: {{ .external.targetValue }}
+          {{- end }}
+      {{- end }}
+    {{- end }}
+{{- end }}

@@ -1,0 +1,15 @@
+{{- if .Values.config -}}
+{{- $config := .Values.config -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "default-app.fullname" . }}
+  namespace: {{ include "default-app.namespace" . }}
+  labels:
+    app: {{ include "default-app.name" . }}
+    app.kubernetes.io/name: {{ include "default-app.name" . }}
+      {{- include "default-app.labels" . | nindent 4 }}
+data:
+  {{ include "default-app.name" }}-config.yaml: |
+    {{- $config | toYaml | nindent 4 }}
+{{- end }}
