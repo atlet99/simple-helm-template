@@ -4,28 +4,25 @@ metadata:
   name: {{ include "default-app.fullname" . }}
   namespace: {{ include "default-app.namespace" . }}
   labels:
-    {{- $labels := include "default-app.labels" . -}}
-    {{- if $labels -}}
-      {{- $labels | nindent 8 }}
-    {{- end }}
+    {{- include "default-app.labels" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount | default 1 }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "default-app.selectorLabels" . | indent 6 }}
+      {{- include "default-app.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      labels:
+        {{- include "default-app.selectorLabels" . | nindent 8 }}
+        {{- with .Values.podLabels }}
+        {{- toYaml . | nindent 8 }}
+        {{- end }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      labels:
-        {{- include "default-app.labels" . | nindent 8 }}
-        {{- with .Values.podLabels }}
-          {{- toYaml . | nindent 8 }}
-        {{- end }}
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
@@ -37,24 +34,18 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Release.Name }}
-          {{- if .Values.podSecurityContext }}
-          securityContext:
-            {{- toYaml .Values.podSecurityContext | nindent 12 }}
-          {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+        - name: {{ .Chart.Name | default "app" }}
+          image: "{{ .Values.image.repository | default "nginx" }}:{{ .Values.image.tag | default "latest" }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
           ports:
-            {{- if .Values.service.ports }}
             {{- range $index, $port := .Values.service.ports }}
-              - name: {{ $port.name | default (printf "port-%d" $index) }}
-                containerPort: {{ $port.targetPort | default $port.port }}
-                protocol: {{ $port.protocol | default "TCP" }}
-            {{- end }}
+            - name: {{ $port.name | default (printf "port-%d" $index) }}
+              containerPort: {{ $port.targetPort | default $port.port }}
+              protocol: {{ $port.protocol | default "TCP" }}
             {{- else }}
-              - name: default-port
-                containerPort: 80
-                protocol: TCP
+            - name: default-port
+              containerPort: 80
+              protocol: TCP
             {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
@@ -70,15 +61,13 @@ spec:
           {{- end }}
           {{- if .Values.persistent.enabled }}
           volumeMounts:
-            - name: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
-              mountPath: {{ .Values.persistent.mountPath }}
-              readOnly: {{ .Values.persistent.readOnly }}
+            - name: persistent-storage
+              mountPath: {{ .Values.persistent.mountPath | default "/data" }}
+              readOnly: {{ .Values.persistent.readOnly | default false }}
           {{- end }}
-      priorityClassName: {{ .Values.priorityClassName | default "" }}
-      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default "30" }}
       {{- if .Values.persistent.enabled }}
       volumes:
-        - name: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
+        - name: persistent-storage
           persistentVolumeClaim:
             claimName: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
       {{- end }}
@@ -94,4 +83,5 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-
+      priorityClassName: {{ .Values.priorityClassName | default "" }}
+      terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 30 }}
