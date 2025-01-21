@@ -22,5 +22,5 @@ release:
     HELM_PACKAGE_OUTPUT: "helm/outputs"
     HELM_CHANNEL: stable
   rules:
-    - if: '$CI_COMMIT_BRANCH == "master" or $CI_COMMIT_BRANCH == "main"'
+    - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main"'
       when: always
