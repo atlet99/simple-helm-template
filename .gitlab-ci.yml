@@ -16,6 +16,7 @@ default:
     - nodb
 
 release:
+  stage: release
   extends: .release-helm-template
   variables:
     HELM_PACKAGE_OUTPUT: "helm/outputs"
