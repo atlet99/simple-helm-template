@@ -20,5 +20,6 @@ release:
   variables:
     HELM_PACKAGE_OUTPUT: "helm/outputs"
     HELM_CHANNEL: stable
-  workflow:
-    - if $CI_COMMIT_BRANCH == "master" or $CI_COMMIT_BRANCH == "main"
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master" or $CI_COMMIT_BRANCH == "main"'
+      when: always
