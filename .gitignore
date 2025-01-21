@@ -5,3 +5,6 @@
 *.iml
 out
 gen
+
+# VS Code project files
+.vscode
