@@ -5,6 +5,16 @@ include:
   - project: 'bilimmedia/devops/devops_nodb/infra/ci-templates'
     file: '/helm/release.yml'
 
+default:
+  interruptible: true
+  retry:
+    max: 2
+    when:
+      - runner_system_failure
+      - api_failure
+  tags:
+    - nodb
+
 release:
   extends: .release-helm-template
   variables:
