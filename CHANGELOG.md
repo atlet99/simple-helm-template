@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.2 (2025-02-02)
+* [default-app] - added LICENSE; added README; 
+
 ## 0.1.1 (2025-02-02)
 * [default-app] - changelogs: disable automount sa creds; disable probes by default; disable persistence; enable grace period for termination; change semantic chart version; update .helmignore;
 
