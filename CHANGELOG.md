@@ -1,0 +1,10 @@
+# Changelog
+
+## 0.1.1 (2025-02-02)
+* [default-app] - changelogs: disable automount sa creds; disable probes by default; disable persistence; enable grace period for termination; change semantic chart version; update .helmignore;
+
+## 0.1.0 (2025-01-21)
+* [default-app] - refactored Helm templates to improve default value handling, fix indentation issues, and ensure compatibility with empty or undefined variables; update chart values, templates and fix minor bugs;
+
+## 0.1.0 (2025-01-20)
+* [default-app] - init base helm template with a lot of bugs; minor fixes and bump params;
