@@ -7,7 +7,6 @@ metadata:
     {{- include "default-app.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
-spec:
   ports:
     {{- range .Values.service.ports }}
     - port: {{ .port }}

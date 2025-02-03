@@ -8,8 +8,8 @@ metadata:
   labels:
     app: {{ include "default-app.name" . }}
     app.kubernetes.io/name: {{ include "default-app.name" . }}
-      {{- include "default-app.labels" . | nindent 4 }}
+    {{- include "default-app.labels" . | nindent 2 }}
 data:
-  {{ include "default-app.name" }}-config.yaml: |
+  {{ include "default-app.name" . }}-config.yaml: |
     {{- $config | toYaml | nindent 4 }}
 {{- end }}
