@@ -34,7 +34,7 @@ spec:
         {{- toYaml . | nindent 8 }}
       {{- end }}
       containers:
-        - name: {{ .Chart.Name | default "app" }}
+        - name: {{ include "default-app.fullname" . | default "app" }}
           image: "{{ .Values.image.repository | default "nginx" }}:{{ .Values.image.tag | default "latest" }}"
           imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
           ports:

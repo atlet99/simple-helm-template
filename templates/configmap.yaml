@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ include "default-app.fullname" . }}
+  name: "{{ include "default-app.fullname" . }}-cm"
   namespace: {{ include "default-app.namespace" . }}
   labels:
     app: {{ include "default-app.name" . }}
