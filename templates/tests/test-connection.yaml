@@ -2,6 +2,7 @@ apiVersion: v1
 kind: Pod
 metadata:
   name: "{{ include "default-app.fullname" . }}-test-connection"
+  namespace: {{ include "default-app.namespace" . }}
   labels:
     {{- include "default-app.labels" . | nindent 4 }}
   annotations:

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.3 (2025-02-03)
+* [default-app] - added namespace override to allow installation into a different namespace;
+
 ## 0.1.2 (2025-02-02)
 * [default-app] - added LICENSE; added README; 
 

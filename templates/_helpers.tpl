@@ -27,7 +27,7 @@ If release name contains chart name it will be used as a full name.
 Creating a namespace for the specified chart.
 */}}
 {{- define "default-app.namespace" -}}
-{{ .Values.namespace | default .Release.Namespace }}
+{{ .Values.namespaceOverride | default .Release.Namespace }}
 {{- end }}
 
 {{/*
