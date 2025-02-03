@@ -47,6 +47,16 @@ spec:
               containerPort: 80
               protocol: TCP
             {{- end }}
+            # include data from ConfigMap and Secret as environment variables
+          envFrom:
+            {{- if .Values.config }}
+            - configMapRef:
+                name: "{{ include "default-app.fullname" . }}-cm"
+            {{- end }}
+            {{- if .Values.secret }}
+            - secretRef:
+                name: "{{ include "default-app.fullname" . }}-secret"
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

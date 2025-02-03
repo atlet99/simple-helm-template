@@ -106,9 +106,12 @@ resources: {}
 config: {}
 
 # This is to setup the secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
+# example:
+# secret:
+#   DB_PASSWORD: password
+#   DB_USER: user
 secret: {}
-  # sensitiveKey: ""
-  # anotherKey: "" 
+
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe: {}

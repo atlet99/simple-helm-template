@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.3 (2025-02-03)
-* [default-app] - added namespace override to allow installation into a different namespace; added suffix to naming params; use full name instead chart.name; fix serviceAccount name; refactor secrets; fix duplicate lines in service; change line space in configmap;
+* [default-app] - added namespace override to allow installation into a different namespace; added suffix to naming params; use full name instead chart.name; fix serviceAccount name; refactor secrets; fix duplicate lines in service; change line space in configmap; enables cm and secrets mount via env; added example for secrets;
 
 ## 0.1.2 (2025-02-02)
 * [default-app] - added LICENSE; added README; 
