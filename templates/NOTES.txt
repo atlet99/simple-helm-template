@@ -6,6 +6,7 @@ Your application is exposed via Ingress. You can access it using the following U
   {{- range $path := $host.paths }}
     - http{{ if gt (len $.Values.ingress.tls) 0 }}s{{ end }}://{{ $host.host }}{{ $path.path }}
   {{- end }}
+  {{- end }}
 {{- else if contains "NodePort" .Values.service.type }}
 Your application is exposed via a NodePort service.
 To retrieve the URL, run:
