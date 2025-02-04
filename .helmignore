@@ -23,3 +23,5 @@
 img/
 # Changelog
 CHANGELOG.md
+# Gitlab CI pipeline
+.gitlab-ci.yml

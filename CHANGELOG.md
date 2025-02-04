@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.3 (2025-02-04)
-* [default-app] - fix notes syntax erorrs and improve condition handling;
+* [default-app] - fix notes syntax erorrs and improve condition handling; ignore CI manifests before packaging;
 
 ## 0.1.3 (2025-02-03)
 * [default-app] - added namespace override to allow installation into a different namespace; added suffix to naming params; use full name instead chart.name; fix serviceAccount name; refactor secrets; fix duplicate lines in service; change line space in configmap; enable cm and secrets mount via env; added example for secrets; fix notes params and descriptions;
