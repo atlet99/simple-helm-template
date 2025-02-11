@@ -43,9 +43,7 @@ Common labels
 {{- define "default-app.labels" -}}
 helm.sh/chart: {{ include "default-app.chart" . | default "unknown-chart" }}
 {{ include "default-app.selectorLabels" . }}
-{{- if .Chart.AppVersion }}
-app.kubernetes.io/version: {{ .Values.appVersion | default .Chart.AppVersion | quote }}
-{{- end }}
+app.kubernetes.io/version: {{ .Values.appVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | default "Helm" }}
 {{- end }}
 
