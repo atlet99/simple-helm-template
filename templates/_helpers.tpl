@@ -45,6 +45,11 @@ helm.sh/chart: {{ include "default-app.chart" . | default "unknown-chart" }}
 {{ include "default-app.selectorLabels" . }}
 app.kubernetes.io/version: {{ .Values.appVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | default "Helm" }}
+app.kubernetes.io/release-date: {{ now | htmlDate }}
+app.kubernetes.io/release-name: {{ .Release.Name | quote }}
+{{- end }}
+
+{{/*
 {{- end }}
 
 {{/*
