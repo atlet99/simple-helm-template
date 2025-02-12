@@ -38,7 +38,7 @@ Create chart name and version as used by the chart label.
 {{- end }}
 
 {{/*
-Common labels
+Common labels for resources.
 */}}
 {{- define "default-app.labels" -}}
 helm.sh/chart: {{ include "default-app.chart" . | default "unknown-chart" }}
@@ -50,25 +50,13 @@ app.kubernetes.io/release-name: {{ .Release.Name | quote }}
 {{- end }}
 
 {{/*
-{{- end }}
-
-{{/*
-Selector labels
+Selector labels for a deployment, service, or ingress
 */}}
 {{- define "default-app.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "default-app.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name | default "unknown-instance" }}
 app.kubernetes.io/version: {{ .Values.appVersion | quote }}
-app.kubernetes.io/chart-version: {{ .Chart.Version | quote }}
-{{- end }}
-
-{{/*
-{{- end }}
-
-{{/*
-{{- end }}
-
-{{/*
+helm.sh/chart-version: {{ .Chart.Version | quote }}
 {{- end }}
 
 {{/*
