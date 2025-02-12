@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.4 (2025-02-12)
-* [default-app] - added appVersion params instead of default chart version;
+* [default-app] - added appVersion params instead of default chart version; added chart version for selectorLabels;
 
 ## 0.1.3 (2025-02-04)
 * [default-app] - fix notes syntax erorrs and improve condition handling; ignore CI manifests before packaging;

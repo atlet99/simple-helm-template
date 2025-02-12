@@ -53,6 +53,17 @@ Selector labels
 {{- define "default-app.selectorLabels" -}}
 app.kubernetes.io/name: {{ include "default-app.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name | default "unknown-instance" }}
+app.kubernetes.io/version: {{ .Values.appVersion | quote }}
+app.kubernetes.io/chart-version: {{ .Chart.Version | quote }}
+{{- end }}
+
+{{/*
+{{- end }}
+
+{{/*
+{{- end }}
+
+{{/*
 {{- end }}
 
 {{/*
