@@ -21,6 +21,8 @@
 *.tmproj
 # img folder
 img/
+# logo folder
+icon/
 # Changelog
 CHANGELOG.md
 # Gitlab CI pipeline
