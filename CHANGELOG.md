@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.5 (2025-02-17)
-* [default-app] - fixes issue with creates permanent secrets; added default icon; added externalSecrets for using envFrom via ESO like 2 modes: SecretStore and ClusterSecretStore;
+* [default-app] - fixes issue with creates permanent secrets; added default icon; added externalSecrets for using envFrom via ESO like 2 modes: SecretStore and ClusterSecretStore; fix issue with boolean checks in deployment; move data.property to dynamic params for specific providers (like a Yandex LockBox);
 
 ## 0.1.4 (2025-02-12)
 * [default-app] - added appVersion params instead of default chart version; added chart version for selectorLabels; added minor info labels; minor fixes with typo and add extended labels;
