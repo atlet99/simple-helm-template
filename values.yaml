@@ -180,6 +180,7 @@ persistent:
     name: "custom-pvc"
     size: 10Gi
     storageClass: "fast-storage"
+    annotations: {}
     accessModes:
       - ReadWriteMany
   mountPath: "/custom-path"
