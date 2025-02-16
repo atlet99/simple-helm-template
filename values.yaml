@@ -115,6 +115,21 @@ config: {}
 #   DB_USER: user
 secret: {}
 
+# This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
+# example:
+# externalSecrets:
+#   enabled: true
+#   kind: "SecretStore" # or "ClusterSecretStore"
+#   secretStoreName: "secret-store"
+#   authSecretName: "yc-auth"
+#   externalSecretName: "external-secret" # by default is default-app.externalSecretName
+#   refreshInterval: "1h"
+#   k8sSecretName: "k8s-secret"
+#   secretKey: "password"
+#   lockboxSecretID: "your-lockbox-secret-id"
+#   propertyName: "password"
+externalSecrets:
+  enabled: false
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe: {}

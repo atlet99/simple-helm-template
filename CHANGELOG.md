@@ -1,10 +1,13 @@
 # Changelog
 
+## 0.1.5 (2025-02-17)
+* [default-app] - fixes issue with creates permanent secrets; added default icon; added externalSecrets for using envFrom via ESO like 2 modes: SecretStore and ClusterSecretStore;
+
 ## 0.1.4 (2025-02-12)
 * [default-app] - added appVersion params instead of default chart version; added chart version for selectorLabels; added minor info labels; minor fixes with typo and add extended labels;
 
 ## 0.1.3 (2025-02-04)
-* [default-app] - fix notes syntax erorrs and improve condition handling; ignore CI manifests before packaging;
+* [default-app] - fix notes syntax errors and improve condition handling; ignore CI manifests before packaging;
 
 ## 0.1.3 (2025-02-03)
 * [default-app] - added namespace override to allow installation into a different namespace; added suffix to naming params; use full name instead chart.name; fix serviceAccount name; refactor secrets; fix duplicate lines in service; change line space in configmap; enable cm and secrets mount via env; added example for secrets; fix notes params and descriptions;

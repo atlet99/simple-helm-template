@@ -57,6 +57,10 @@ spec:
             - secretRef:
                 name: "{{ include "default-app.fullname" . }}-secret"
             {{- end }}
+            {{- if eq .Values.externalSecrets.enabled true -}}
+            - secretRef:
+                name: "{{ include "default-app.externalSecretName" . }}"
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}

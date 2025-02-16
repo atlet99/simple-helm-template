@@ -69,3 +69,26 @@ Create the name of the service account to use
 {{- default "default" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
+
+
+{{/*
+Check if the CRD for External Secrets Operator is installed
+*/}}
+{{- define "external-secrets.checkCRD" -}}
+{{- if .Values.externalSecrets.enabled }}
+{{- if not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "externalsecrets.external-secrets.io") }}
+{{- fail "ExternalSecrets CRD not found. Please install External Secrets Operator before deploying." }}
+{{- end }}
+{{- end }}
+{{- end }}
+
+{{/*
+Generate the default ExternalSecret name
+*/}}
+{{- define "default-app.externalSecretName" -}}
+{{- if .Values.externalSecrets.externalSecretName }}
+{{- .Values.externalSecrets.externalSecretName }}
+{{- else }}
+{{- printf "%s-external-secret" (include "default-app.fullname" .) }}
+{{- end }}
+{{- end }}
