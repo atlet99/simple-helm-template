@@ -47,13 +47,12 @@ spec:
               containerPort: 80
               protocol: TCP
             {{- end }}
-            # include data from ConfigMap and Secret as environment variables
           envFrom:
-            {{- if .Values.config }}
+            {{- if and .Values.config (not .Values.configMountPath) }}
             - configMapRef:
                 name: "{{ include "default-app.fullname" . }}-cm"
             {{- end }}
-            {{- if .Values.secret }}
+            {{- if and .Values.secret (not .Values.secretMountPath) }}
             - secretRef:
                 name: "{{ include "default-app.fullname" . }}-secret"
             {{- end }}
@@ -73,18 +72,50 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if .Values.persistent.enabled }}
           volumeMounts:
+            {{- if and .Values.config .Values.configMountPath }}
+            - name: {{ .Values.configVolumeMountName | default "config-volume" }}
+              mountPath: {{ .Values.configMountPath }}
+              {{- if (default .Values.configMountPathPermissions true) }}
+              readOnly: true
+              {{- end }}
+            {{- end }}
+            {{- if and .Values.secret .Values.secretMountPath }}
+            - name: {{ .Values.secretVolumeMountName | default "secret-volume" }}
+              mountPath: {{ .Values.secretMountPath }}
+              readOnly: true
+            {{- end }}
+            {{- if and .Values.externalSecrets.externalSecretMountPath (default .Values.externalSecrets.enabled true) }}
+            - name: {{ .Values.externalSecrets.externalSecretVolumeMountName | default "external-secret-volume" }}
+              mountPath: {{ .Values.externalSecrets.externalSecretMountPath }}
+              readOnly: true
+            {{- end }}
+            {{- if .Values.persistent.enabled }}
             - name: persistent-storage
               mountPath: {{ .Values.persistent.mountPath | default "/data" }}
               readOnly: {{ .Values.persistent.readOnly | default false }}
-          {{- end }}
-      {{- if .Values.persistent.enabled }}
+            {{- end }}
       volumes:
+        {{- if and .Values.config .Values.configMountPath }}
+        - name: {{ .Values.configVolumeMountName | default "config-volume" }}
+          configMap:
+            name: "{{ include "default-app.fullname" . }}-cm"
+        {{- end }}
+        {{- if and .Values.secret .Values.secretMountPath }}
+        - name: {{ .Values.secretVolumeMountName | default "secret-volume" }}
+          secret:
+            secretName: "{{ include "default-app.fullname" . }}-secret"
+        {{- end }}
+        {{- if and .Values.externalSecrets.externalSecretMountPath (default .Values.externalSecrets.enabled true) }}
+        - name: {{ .Values.externalSecrets.externalSecretVolumeMountName | default "external-secret-volume" }}
+          secret:
+            secretName: "{{ .Values.externalSecrets.k8sSecretName | default "default-secret" }}"
+        {{- end }}
+        {{- if .Values.persistent.enabled }}
         - name: persistent-storage
           persistentVolumeClaim:
             claimName: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
-      {{- end }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

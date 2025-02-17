@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.5 (2025-02-18)
+* [default-app] - added cm and secret/external-secret volume mounts (by default disabled);
+
 ## 0.1.5 (2025-02-17)
 * [default-app] - fixes issue with creates permanent secrets; added default icon; added externalSecrets for using envFrom via ESO like 2 modes: SecretStore and ClusterSecretStore; fix issue with boolean checks in deployment; move data.property to dynamic params for specific providers (like a Yandex LockBox); fix annotations params for pvc;
 

@@ -108,12 +108,31 @@ resources: {}
 #   LOG_LEVEL: debug
 config: {}
 
+# configMountPath is a variable that defines the mount path for the config map
+# if you want to mount the config map to a specific path in the container
+# you can specify the path here, if you don't specify it the config map will be
+# mounted to the default path which is /config
+# configMountPathPermissions is a boolean that defines the permissions for the config map
+# configVolumeMountName is a variable that defines the name of the config map volume
+configMountPath: ""
+configVolumeMountName: ""
+configMountPathPermissions: true
+
 # This is to setup the secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
 # example:
 # secret:
 #   DB_PASSWORD: password
 #   DB_USER: user
 secret: {}
+
+# secretVolumeMountPath is a variable that defines the mount path for the secret
+# if you want to mount the secret to a specific path in the container
+# you can specify the path here, if you don't specify it the secret will be
+# mounted to the default path which is /secret
+# example:
+# secretVolumeMountPath: /secret
+secretVolumeMountName: ""
+secretMountPath: ""
 
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
 # example:
@@ -128,8 +147,12 @@ secret: {}
 #   secretKey: "password"
 #   lockboxSecretID: "your-lockbox-secret-id"
 #   propertyName: "password"
+#   externalSecretMountPath: "/external-secret"
+#   externalSecretVolumeMountName: "external-secret-volume"
 externalSecrets:
   enabled: false
+  externalSecretMountPath: ""
+  externalSecretVolumeMountName: ""
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe: {}
