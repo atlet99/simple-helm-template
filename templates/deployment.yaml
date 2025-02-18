@@ -26,9 +26,9 @@ spec:
     spec:
       {{- with .Values.imagePullSecrets }}
       imagePullSecrets:
-        {{- toYaml . | nindent 2 }}
+        {{- toYaml . | nindent 8 }}
       {{- end }}
-      serviceAccountName: "{{ include "default-app.serviceAccountName" . }}-sa"
+      serviceAccountName: "{{ include "default-app.serviceAccountName" . }}"
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}

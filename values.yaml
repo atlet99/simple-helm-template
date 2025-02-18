@@ -17,6 +17,9 @@ image:
   tag: ""
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+# example:
+# imagePullSecrets:
+#   - name: myregistrykey
 imagePullSecrets: []
 # This is to override the chart name.
 nameOverride: ""
@@ -151,6 +154,7 @@ secretMountPath: ""
 #   externalSecretVolumeMountName: "external-secret-volume"
 externalSecrets:
   enabled: false
+  externalSecretName: ""
   externalSecretMountPath: ""
   externalSecretVolumeMountName: ""
 

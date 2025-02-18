@@ -60,16 +60,15 @@ helm.sh/chart-version: {{ .Chart.Version | quote }}
 {{- end }}
 
 {{/*
-Create the name of the service account to use
+Create the name of the service account to use with a suffix
 */}}
 {{- define "default-app.serviceAccountName" -}}
 {{- if .Values.serviceAccount.create }}
-{{- default (include "default-app.fullname" .) .Values.serviceAccount.name }}
+{{- printf "%s-sa" (default (include "default-app.fullname" .) .Values.serviceAccount.name) }}
 {{- else }}
-{{- default "default" .Values.serviceAccount.name }}
+{{- default "default-sa" .Values.serviceAccount.name }}
 {{- end }}
 {{- end }}
-
 
 {{/*
 Check if the CRD for External Secrets Operator is installed
