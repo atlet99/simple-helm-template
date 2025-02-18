@@ -194,7 +194,7 @@ autoscaling:
 #   pvc:
 #     name: "custom-pvc"
 #     size: 10Gi
-#     storageClass: "fast-storage"
+#     storageClass: "csi-cinder-ssd-delete"
 #     accessModes:
 #       - ReadWriteMany
 persistent:
@@ -202,7 +202,7 @@ persistent:
   pvc:
     name: "custom-pvc"
     size: 10Gi
-    storageClass: "fast-storage"
+    storageClass: ""
     annotations: {}
     accessModes:
       - ReadWriteMany
