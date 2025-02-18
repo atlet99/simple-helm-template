@@ -56,7 +56,7 @@ spec:
             - secretRef:
                 name: "{{ include "default-app.fullname" . }}-secret"
             {{- end }}
-            {{- if (default .Values.externalSecrets.enabled true) -}}
+            {{- if .Values.externalSecrets.enabled }}
             - secretRef:
                 name: "{{ include "default-app.externalSecretName" . }}"
             {{- end }}
@@ -85,7 +85,7 @@ spec:
               mountPath: {{ .Values.secretMountPath }}
               readOnly: true
             {{- end }}
-            {{- if and .Values.externalSecrets.externalSecretMountPath (default .Values.externalSecrets.enabled true) }}
+            {{- if and .Values.externalSecrets.externalSecretMountPath .Values.externalSecrets.enabled }}
             - name: {{ .Values.externalSecrets.externalSecretVolumeMountName | default "external-secret-volume" }}
               mountPath: {{ .Values.externalSecrets.externalSecretMountPath }}
               readOnly: true
@@ -106,7 +106,7 @@ spec:
           secret:
             secretName: "{{ include "default-app.fullname" . }}-secret"
         {{- end }}
-        {{- if and .Values.externalSecrets.externalSecretMountPath (default .Values.externalSecrets.enabled true) }}
+        {{- if and .Values.externalSecrets.externalSecretMountPath .Values.externalSecrets.enabled }}
         - name: {{ .Values.externalSecrets.externalSecretVolumeMountName | default "external-secret-volume" }}
           secret:
             secretName: "{{ .Values.externalSecrets.k8sSecretName | default "default-secret" }}"
