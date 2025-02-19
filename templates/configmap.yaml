@@ -13,4 +13,3 @@ data:
   {{ .Values.configMapFile | default "default-file" }}: |
     {{- $config | toYaml | nindent 4 }}
 {{- end }}
-{{- end }}
