@@ -11,7 +11,7 @@ metadata:
     {{- include "default-app.labels" . | nindent 2 }}
 data:
   {{- range $key, $value := .Values.config -}}
-  {{ $key }}: |
-    {{- $value | toYaml | nindent 4 }}
+  {{ $key | quote }}: | 
+    {{- nindent 4 $value }}
   {{- end }}
 {{- end }}
