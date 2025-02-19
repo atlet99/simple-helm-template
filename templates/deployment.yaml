@@ -76,8 +76,8 @@ spec:
             {{- if and .Values.config .Values.configMountPath }}
             - name: {{ .Values.configVolumeMountName | default "config-volume" }}
               mountPath: {{ .Values.configMountPath }}
-              {{- if (default .Values.configMountPathPermissions true) }}
-              readOnly: true
+              {{- if (default .Values.configMountPathPermissions false) }}
+              readOnly: false
               {{- end }}
             {{- end }}
             {{- if and .Values.secret .Values.secretMountPath }}

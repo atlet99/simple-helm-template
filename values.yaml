@@ -121,7 +121,7 @@ config: {}
 configMapFile: ""
 configMountPath: ""
 configVolumeMountName: ""
-configMountPathPermissions: true
+configMountPathPermissions: false
 
 # This is to setup the secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
 # example:
