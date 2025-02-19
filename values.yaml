@@ -117,6 +117,8 @@ config: {}
 # mounted to the default path which is /config
 # configMountPathPermissions is a boolean that defines the permissions for the config map
 # configVolumeMountName is a variable that defines the name of the config map volume
+# configMapFile is a variable that defines the name of the config map file
+configMapFile: ""
 configMountPath: ""
 configVolumeMountName: ""
 configMountPathPermissions: true
