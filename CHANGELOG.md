@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.5 (2025-02-20)
+* [default-app] - fix ingress route to correct svc name; configmap vl permissions;
+
 ## 0.1.5 (2025-02-18)
 * [default-app] - added cm and secret/external-secret volume mounts (by default disabled); fix issue with checking ESO crd; fix default StorageClass; fix rendering imagePullSecrets; fix rendering sa; added example for imagePullSecrets; fix suffix "sa" in sa; fix cm params via range; fix cm typo; return and fix cm file name via vars; fix typos; fix cm permissions;
 

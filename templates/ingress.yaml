@@ -34,7 +34,7 @@ spec:
             pathType: {{ .pathType | default "Prefix" }}
             backend:
               service:
-                name: {{ include "default-app.fullname" $ }}
+                name: "{{ include "default-app.fullname"-svc }}"
                 port:
                   number: {{ .port | default (index $.Values.service.ports 0).port }}
           {{- end }}
