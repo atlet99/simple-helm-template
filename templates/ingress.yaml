@@ -36,7 +36,13 @@ spec:
               service:
                 name: "{{ include "default-app.fullname" . }}-svc"
                 port:
-                  name: {{ .name | default (index $.Values.service.ports 0).name | quote }}
+                  {{- if .port }}
+                  number: {{ .port }}
+                  {{- else if hasKey (index $.Values.service.ports 0) "name" }}
+                  name: {{ (index $.Values.service.ports 0).name | quote }}
+                  {{- else }}
+                  number: {{ (index $.Values.service.ports 0).port }}
+                  {{- end }}
           {{- end }}
     {{- end }}
 {{- end }}
