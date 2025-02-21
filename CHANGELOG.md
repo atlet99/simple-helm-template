@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.6 (2025-02-21)
+* [default-app] - fix deployment templates;
+
 ## 0.1.5 (2025-02-20)
 * [default-app] - fix ingress route to correct svc name; configmap vl permissions; fix typo;
 
