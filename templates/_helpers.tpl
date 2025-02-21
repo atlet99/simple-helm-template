@@ -13,13 +13,12 @@ If release name contains chart name it will be used as a full name.
 {{- define "default-app.fullname" -}}
 {{- if and .Values (hasKey .Values "fullnameOverride") .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
+{{- else if and .Values (hasKey .Values "nameOverride") .Values.nameOverride }}
+{{- .Values.nameOverride | trunc 63 | trimSuffix "-" }}
+{{- else if and .Release (hasKey .Release "Name") .Release.Name }}
+{{- .Release.Name | trunc 63 | trimSuffix "-" }}
 {{- else }}
-{{- $name := default .Chart.Name .Values.nameOverride }}
-{{- if contains $name .Release.Name }}
-{{- printf "%s" .Release.Name | trunc 63 | trimSuffix "-" }}
-{{- else }}
-{{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" }}
-{{- end }}
+temp-release
 {{- end }}
 {{- end }}
 
