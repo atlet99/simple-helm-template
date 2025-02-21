@@ -22,8 +22,8 @@ image:
 #   - name: myregistrykey
 imagePullSecrets: []
 # This is to override the chart name.
-nameOverride: "nedb-back-main"
-fullnameOverride: "nedb-back-main"
+nameOverride: ""
+fullnameOverride: ""
 
 # This field overrides the namespace for all resources.
 namespaceOverride: ""
@@ -60,31 +60,37 @@ service:
   type: ClusterIP
   ports:
     - port: 80
-      targetPort: 80
-      name: nodb-nginx-http
-      protocol: TCP
-    - port: 9000
-      targetPort: 9000
-      name: nodb-http
+      targetPort: http
+      name: http
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
-  enabled: true
-  className: "traefik-ingress"
-  annotations:
-    "cert-manager.io/cluster-issuer": "letsencrypt-stage"
-    "traefik.ingress.kubernetes.io/router.middlewares": "traefik-ip-whitelist@kubernetescrd"
-    "traefik.ingress.kubernetes.io/router.entrypoints": "websecure"
-    "traefik.ingress.kubernetes.io/router.tls": "true"
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: "back-dev.nobd-3.kz"
+    - host: app.example.com
       paths:
         - path: /
           pathType: Prefix
+          port: 80
+        - path: /api
+          pathType: Prefix
+          port: 8080
+    - host: admin.example.com
+      paths:
+        - path: /
+          pathType: Prefix
+          port: 9090
   tls:
-    - secretName: "back-dev-nobd-3-kz-tls"
+    - secretName: app-tls-secret
       hosts:
-        - "back-dev.nobd-3.kz"
+        - app.example.com
+    - secretName: admin-tls-secret
+      hosts:
+        - admin.example.com
 
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
