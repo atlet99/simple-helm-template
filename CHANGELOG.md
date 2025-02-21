@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.6 (2025-02-21)
-* [default-app] - fix deployment templates;
+* [default-app] - fix deployment templates; fix context argument into include method; change ingress service port to service name for more clear and secure reading;
 
 ## 0.1.5 (2025-02-20)
 * [default-app] - fix ingress route to correct svc name; configmap vl permissions; fix typo;
