@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.6 (2025-02-24)
-* [default-app] - fix securityContext params and added containerSecurityContext;
+* [default-app] - fix securityContext params and added containerSecurityContext; fix labels and annotations;
 
 ## 0.1.6 (2025-02-21)
 * [default-app] - fix deployment templates; fix context argument into include method; change ingress service port to service name for more clear and secure reading; fix fullnameOverride parameter for existence, improved via haskey; improve ports choosing via any conditions and haskey; fix template for fullname; fix fullname templates and fix ingress route to specific svc name;

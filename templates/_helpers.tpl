@@ -41,12 +41,20 @@ Create chart name and version as used by the chart label.
 Common labels for resources.
 */}}
 {{- define "default-app.labels" -}}
-helm.sh/chart: {{ include "default-app.chart" . | default "unknown-chart" }}
-{{ include "default-app.selectorLabels" . }}
+app.kubernetes.io/name: {{ include "default-app.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name | default "unknown-instance" }}
 app.kubernetes.io/version: {{ .Values.appVersion | quote }}
 app.kubernetes.io/managed-by: {{ .Release.Service | default "Helm" }}
+helm.sh/chart: {{ include "default-app.chart" . | default "unknown-chart" }}
+{{- end }}
+
+{{/*
+Common annotations for resources.
+*/}}
+{{- define "default-app.annotations" -}}
 app.kubernetes.io/release-date: {{ now | htmlDate }}
 app.kubernetes.io/release-name: {{ .Release.Name | quote }}
+helm.sh/chart-version: {{ .Chart.Version | quote }}
 {{- end }}
 
 {{/*

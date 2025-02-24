@@ -5,6 +5,8 @@ metadata:
   namespace: {{ include "default-app.namespace" . }}
   labels:
     {{- include "default-app.labels" . | nindent 4 }}
+  annotations:
+    {{- include "default-app.annotations" . | nindent 4 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount | default 1 }}
