@@ -47,6 +47,10 @@ spec:
               containerPort: 80
               protocol: TCP
             {{- end }}
+          {{- with .Values.containerSecurityContext }}
+          securityContext:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
           envFrom:
             {{- if and .Values.config (not .Values.configMountPath) }}
             - configMapRef:

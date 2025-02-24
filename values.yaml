@@ -47,6 +47,14 @@ podAnnotations: {}
 # For more information checkout: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
 podLabels: {}
 
+# This is for setting the securityContext for the container.
+# For more information checkout: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
+containerSecurityContext: {}
+# runAsUser: 2000
+# allowPrivilegeEscalation: false
+# capabilities:
+#   add: ["NET_ADMIN", "SYS_TIME"]
+
 # This is for setting the securityContext for the pod.
 # For more information checkout: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 podSecurityContext: {}
