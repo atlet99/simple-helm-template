@@ -1,5 +1,4 @@
-{{- if .Values.config -}}
-{{- $config := .Values.config -}}
+{{- if .Values.config }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -8,8 +7,8 @@ metadata:
   labels:
     app: {{ include "default-app.name" . }}
     app.kubernetes.io/name: {{ include "default-app.name" . }}
-    {{- include "default-app.labels" . | nindent 2 }}
+    {{- include "default-app.labels" . | nindent 4 }}
 data:
-  {{ .Values.configMapFile | default "default-file" }}: |
-    {{- $config | toYaml | nindent 4 }}
+  {{ .Values.configMapFile }}: |-
+    {{- .Values.config | toYaml | nindent 4 }}
 {{- end }}

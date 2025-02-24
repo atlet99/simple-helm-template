@@ -82,7 +82,7 @@ spec:
             {{- if and .Values.config .Values.configMountPath }}
             - name: {{ .Values.configVolumeMountName | default "config-volume" }}
               mountPath: {{ .Values.configMountPath }}
-              readOnly: {{ .Values.config.configMountPathPermissions | default false }}
+              readOnly: {{ .Values.configMountPathPermissions | default false }}
             {{- end }}
             {{- if and .Values.secret .Values.secretMountPath }}
             - name: {{ .Values.secretVolumeMountName | default "secret-volume" }}

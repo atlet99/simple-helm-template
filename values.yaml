@@ -115,7 +115,7 @@ resources: {}
 # This is to setup the configmap for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/configmap/
 # config is a dictionary that will be converted to a configmap and mounted to the pod as a file
 # example:
-# config:
+# config: |
 #   LOG_LEVEL: debug
 config: {}
 
