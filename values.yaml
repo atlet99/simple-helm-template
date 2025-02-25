@@ -112,40 +112,87 @@ resources: {}
   #   cpu: 100m
   #   memory: 128Mi
 
-# This is to setup the configmap for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/configmap/
-# config is a dictionary that will be converted to a configmap and mounted to the pod as a file
+# This is to setup the config map for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/configmap/
 # example:
-# config: |
-#   LOG_LEVEL: debug
-config: {}
-
-# configMountPath is a variable that defines the mount path for the config map
-# if you want to mount the config map to a specific path in the container
-# you can specify the path here, if you don't specify it the config map will be
-# mounted to the default path which is /config
-# configMountPathPermissions is a boolean that defines the permissions for the config map
-# configVolumeMountName is a variable that defines the name of the config map volume
-# configMapFile is a variable that defines the name of the config map file
-configMapFile: ""
-configMountPath: ""
-configVolumeMountName: ""
-configMountPathPermissions: false
+# configs:
+#   keyValueEnvFromConfig:
+#     enabled: true
+#     name: "env-from-config"
+#     useEnvFrom: true
+#     data:
+#       APP_ENV: "development"
+#       APP_LOG_LEVEL: "info"
+#   appConfig:
+#     enabled: true
+#     name: "app-config"
+#     mountPath: "/config/app"
+#     fileName: "app-config.yaml"
+#     readOnly: false
+#     data: |
+#       user nginx;
+#       worker_proccess auto;
+#       events { worker_connections 1024; }
+#       http {
+#         server {
+#           listen 80;
+#           server_name localhost;
+#           location / {
+#             root /usr/share/nginx/html;
+#             index index.html index.htm;
+#           }
+#         }
+#       }
+#   dbConfig:
+#     enabled: true
+#     name: "db-config"
+#     mountPath: "/config/db"
+#     fileName: "db-config.yaml"
+#     readOnly: false
+#     data: |
+#       user nginx;
+#       worker_proccess auto;
+#       events { worker_connections 1024; }
+#       http {
+#         server {
+#           listen 80;
+#           server_name localhost;
+#           location / {
+#             root /usr/share/nginx/html;
+#             index index.html index.htm;
+#           }
+#         }
+#       }
+configs: {}
 
 # This is to setup the secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
 # example:
-# secret:
-#   DB_PASSWORD: password
-#   DB_USER: user
-secret: {}
-
-# secretVolumeMountPath is a variable that defines the mount path for the secret
-# if you want to mount the secret to a specific path in the container
-# you can specify the path here, if you don't specify it the secret will be
-# mounted to the default path which is /secret
-# example:
-# secretVolumeMountPath: /secret
-secretVolumeMountName: ""
-secretMountPath: ""
+# secrets:
+#   appSecret:
+#     enabled: true
+#     name: "app-secret"
+#     mountPath: "/secret/app"
+#     fileName: "app-secret.env"
+#     readOnly: true
+#     data: |
+#       DB_PASSWORD = "supersecret";
+#       DB_USER = "postgres";
+#   apiSecret:
+#     enabled: true
+#     name: "db-secret"
+#     mountPath: "/config/db-secret"
+#     fileName: "db-secret.yaml"
+#     readOnly: true
+#     data: |
+#       DB_USER = "postgres";
+#       DB_PASS = "pass123";
+#   keyValueSecret:
+#     enabled: true
+#     name: "env-from-secret"
+#     envFrom: true
+#     data:
+#       DB_USER: "postgres"
+#       DB_PASS: "pass123"
+secrets: {}
 
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
 # example:
