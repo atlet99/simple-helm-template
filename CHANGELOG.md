@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.7 (2025-02-25)
+* [default-app] - fix cm readOnly params conditions; 
+
 ## 0.1.7 (2025-02-24)
 * [default-app] - fix configmap syntax and rendering;
 
