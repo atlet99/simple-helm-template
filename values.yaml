@@ -217,23 +217,63 @@ secrets: {}
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
 # example:
 # externalSecrets:
-#   enabled: true
-#   kind: "SecretStore" # or "ClusterSecretStore"
-#   secretStoreName: "secret-store"
-#   authSecretName: "yc-auth"
-#   externalSecretName: "external-secret" # by default is default-app.externalSecretName
-#   refreshInterval: "1h"
-#   k8sSecretName: "k8s-secret"
-#   secretKey: "password"
-#   lockboxSecretID: "your-lockbox-secret-id"
-#   propertyName: "password"
-#   externalSecretMountPath: "/external-secret"
-#   externalSecretVolumeMountName: "external-secret-volume"
-externalSecrets:
-  enabled: false
-  externalSecretName: ""
-  externalSecretMountPath: ""
-  externalSecretVolumeMountName: ""
+#   appExternalSecret:
+#     enabled: true
+#     name: "app-external-secret"
+#     secretStoreName: "default-secret-store"
+#     kind: "SecretStore"
+#     k8sSecretName: "app-secret"
+#     refreshInterval: "1h"
+#     dataFrom:
+#       key: "secrets/app-secret"
+#     templateData:
+#       app-secret.conf: |
+#         DB_USER={{ .username }}
+#         DB_PASSWORD={{ .password }}
+#     mountPath: "/secret/app"
+#     readOnly: true
+#   dbExternalSecret:
+#     enabled: true
+#     name: "db-external-secret"
+#     secretStoreName: "default-secret-store"
+#     kind: "SecretStore"
+#     k8sSecretName: "db-secret"
+#     refreshInterval: "1h"
+#     data:
+#       - secretKey: "DB_USER"
+#         remoteKey: "secrets/db-secret"
+#         property: "db_user"
+#       - secretKey: "DB_PASS"
+#         remoteKey: "secrets/db-secret"
+#         property: "db_pass"
+#     mountPath: "/config/db-secret"
+#     readOnly: true
+#   keyValueExternalSecret:
+#     enabled: true
+#     name: "env-from-external-secret"
+#     secretStoreName: "default-secret-store"
+#     kind: "SecretStore"
+#     k8sSecretName: "keyvalue-secret"
+#     refreshInterval: "1h"
+#     envFrom: true
+#     dataFrom:
+#       key: "secrets/keyvalue-secret"
+#   configWithEnvKeys:
+#     enabled: true
+#     name: "config-with-env-keys"
+#     secretStoreName: "default-secret-store"
+#     kind: "SecretStore"
+#     k8sSecretName: "config-env-secret"
+#     refreshInterval: "1h"
+#     data:
+#       - secretKey: "DB_USER"
+#         remoteKey: "secrets/config-db-user"
+#       - secretKey: "DB_PASSWORD"
+#         remoteKey: "secrets/config-db-pass"
+#     templateFrom:
+#       configMap: "app-config-tmpl"
+#       key: "config.yml"
+externalSecrets: {}
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe: {}

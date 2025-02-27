@@ -66,11 +66,26 @@ spec:
                 name: "{{ .name }}"
             {{- end }}
             {{- end }}
-            {{- if .Values.externalSecrets.enabled }}
+            {{- range .Values.externalSecrets }}
+            {{- if and  .enabled .envFrom (not .mountPath) }}
             - secretRef:
-                name: "{{ include "default-app.externalSecretName" . }}"
+                name: "{{ .name }}"
+            {{- end }}
             {{- end }}
           env:
+            {{- range .Values.externalSecrets }}
+            {{- if and .enabled (not .mountPath) }}
+            {{- $externalSecretName := .name }}
+            {{- range .envVars }}
+            - name: "{{ .envName }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $externalSecretName }}"
+                  key: "{{ .key }}"
+                  optional: {{ .optional | default true }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
             {{- range .Values.secrets }}
             {{- if and .enabled (not .mountPath) }}
             {{- $secretName := .name }}
@@ -124,10 +139,12 @@ spec:
               readOnly: {{ .readOnly | default true | toString | lower }}
             {{- end }}
             {{- end }}
-            {{- if and .Values.externalSecrets.externalSecretMountPath .Values.externalSecrets.enabled }}
-            - name: {{ .Values.externalSecrets.externalSecretVolumeMountName | default "external-secret-volume" }}
-              mountPath: {{ .Values.externalSecrets.externalSecretMountPath }}
-              readOnly: true
+            {{- range .Values.externalSecrets }}
+            {{- if and .enabled .mountPath }}
+            - name: "{{ .name }}-ext-sec-vl"
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly | default true | toString | lower }}
+            {{- end }}
             {{- end }}
             {{- if .Values.persistent.enabled }}
             - name: persistent-storage
@@ -149,10 +166,12 @@ spec:
             secretName: "{{ .name }}"
         {{- end }}
         {{- end }}
-        {{- if and .Values.externalSecrets.externalSecretMountPath .Values.externalSecrets.enabled }}
-        - name: {{ .Values.externalSecrets.externalSecretVolumeMountName | default "external-secret-volume" }}
+        {{- range .Values.externalSecrets }}
+        {{- if .enabled }}
+        - name: "{{ .name }}-ext-sec-vl"
           secret:
-            secretName: "{{ .Values.externalSecrets.k8sSecretName | default "default-secret" }}"
+            secretName: "{{ .name }}"
+        {{- end }}
         {{- end }}
         {{- if .Values.persistent.enabled }}
         - name: persistent-storage

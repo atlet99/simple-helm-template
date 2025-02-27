@@ -79,23 +79,16 @@ Create the name of the service account to use with a suffix
 {{- end }}
 
 {{/*
-Check if the CRD for External Secrets Operator is installed
+Check if the CRD for External Secrets Operator is installed (only when not in --dry-run mode)
 */}}
 {{- define "external-secrets.checkCRD" -}}
-{{- if .Values.externalSecrets.enabled }}
-{{- if not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "externalsecrets.external-secrets.io") }}
-{{- fail "ExternalSecrets CRD not found. Please install External Secrets Operator before deploying." }}
-{{- end }}
-{{- end }}
-{{- end }}
-
-{{/*
-Generate the default ExternalSecret name
-*/}}
-{{- define "default-app.externalSecretName" -}}
-{{- if .Values.externalSecrets.externalSecretName }}
-{{- .Values.externalSecrets.externalSecretName }}
-{{- else }}
-{{- printf "%s-external-secret" (include "default-app.fullname" .) }}
+{{- if and .Values.externalSecrets.enabled (not .Release.IsDryRun) -}}
+  {{- if not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "externalsecrets.external-secrets.io") }}
+    {{- fail "❌ ExternalSecrets CRD not found! Install External Secrets Operator before deploying. Run: helm install external-secrets external-secrets/external-secrets --namespace external-secrets --create-namespace" }}
+  {{- else if not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "secretstores.external-secrets.io") }}
+    {{- fail "❌ SecretStore CRD not found! Ensure External Secrets Operator is properly installed." }}
+  {{- else if not (lookup "apiextensions.k8s.io/v1" "CustomResourceDefinition" "" "clustersecretstores.external-secrets.io") }}
+    {{- fail "❌ ClusterSecretStore CRD not found! Ensure External Secrets Operator is properly installed." }}
+  {{- end }}
 {{- end }}
 {{- end }}
