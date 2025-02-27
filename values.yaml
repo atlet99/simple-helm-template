@@ -114,85 +114,106 @@ resources: {}
 
 # This is to setup the config map for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/configmap/
 # example:
-# configs:
-#   keyValueEnvFromConfig:
-#     enabled: true
-#     name: "env-from-config"
-#     useEnvFrom: true
-#     data:
-#       APP_ENV: "development"
-#       APP_LOG_LEVEL: "info"
-#   appConfig:
-#     enabled: true
-#     name: "app-config"
-#     mountPath: "/config/app"
-#     fileName: "app-config.yaml"
-#     readOnly: false
-#     data: |
-#       user nginx;
-#       worker_proccess auto;
-#       events { worker_connections 1024; }
-#       http {
-#         server {
-#           listen 80;
-#           server_name localhost;
-#           location / {
-#             root /usr/share/nginx/html;
-#             index index.html index.htm;
-#           }
-#         }
-#       }
-#   dbConfig:
-#     enabled: true
-#     name: "db-config"
-#     mountPath: "/config/db"
-#     fileName: "db-config.yaml"
-#     readOnly: false
-#     data: |
-#       user nginx;
-#       worker_proccess auto;
-#       events { worker_connections 1024; }
-#       http {
-#         server {
-#           listen 80;
-#           server_name localhost;
-#           location / {
-#             root /usr/share/nginx/html;
-#             index index.html index.htm;
-#           }
-#         }
-#       }
-configs: {}
+configs:
+  keyValueEnvFromConfig:
+    enabled: true
+    name: "env-from-config"
+    useEnvFrom: true
+    data:
+      APP_ENV: "development"
+      APP_LOG_LEVEL: "info"
+  appConfig:
+    enabled: true
+    name: "app-config"
+    mountPath: "/config/app"
+    fileName: "app-config.yaml"
+    readOnly: false
+    data: |
+      user nginx;
+      worker_proccess auto;
+      events { worker_connections 1024; }
+      http {
+        server {
+          listen 80;
+          server_name localhost;
+          location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+          }
+        }
+      }
+  dbConfig:
+    enabled: true
+    name: "db-config"
+    mountPath: "/config/db"
+    fileName: "db-config.yaml"
+    readOnly: false
+    data: |
+      user nginx;
+      worker_proccess auto;
+      events { worker_connections 1024; }
+      http {
+        server {
+          listen 80;
+          server_name localhost;
+          location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+          }
+        }
+      }
+  configWithEnvKeys:
+    enabled: true
+    name: "config-with-env-keys"
+    envVars:
+      - envName: "USER_CONFIG_PARAMS"
+        key: "changeme"
+        optional: true
+      - envName: "API_VERSION"
+        key: "v3"
+        optional: false
+# configs: {}
 
 # This is to setup the secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
 # example:
-# secrets:
-#   appSecret:
-#     enabled: true
-#     name: "app-secret"
-#     mountPath: "/secret/app"
-#     fileName: "app-secret.env"
-#     readOnly: true
-#     data: |
-#       DB_PASSWORD = "supersecret";
-#       DB_USER = "postgres";
-#   apiSecret:
-#     enabled: true
-#     name: "db-secret"
-#     mountPath: "/config/db-secret"
-#     fileName: "db-secret.yaml"
-#     readOnly: true
-#     data: |
-#       DB_USER = "postgres";
-#       DB_PASS = "pass123";
-#   keyValueSecret:
-#     enabled: true
-#     name: "env-from-secret"
-#     envFrom: true
-#     data:
-#       DB_USER: "postgres"
-#       DB_PASS: "pass123"
-secrets: {}
+secrets:
+  appSecret:
+    enabled: true
+    name: "app-secret"
+    mountPath: "/secret/app"
+    fileName: "app-secret.env"
+    readOnly: true
+    data: |
+      DB_PASSWORD = "supersecret";
+      DB_USER = "postgres";
+  apiSecret:
+    enabled: true
+    name: "db-secret"
+    mountPath: "/config/db-secret"
+    fileName: "db-secret.yaml"
+    readOnly: true
+    data: |
+      DB_USER = "postgres";
+      DB_PASS = "pass123";
+  keyValueSecret:
+    enabled: true
+    name: "env-from-secret"
+    envFrom: true
+    data:
+      DB_USER: "postgres"
+      DB_PASS: "pass123"
+  configWithEnvKeys:
+    enabled: true
+    name: "config-with-env-keys"
+    envVars:
+      - envName: "DB_USER"
+        key: "username"
+        optional: true
+      - envName: "DB_PASSWORD"
+        key: "password"
+        optional: false
+
+# secrets: {}
 
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
 # example:

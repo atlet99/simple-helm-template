@@ -11,11 +11,21 @@ metadata:
 data:
   {{- if .useEnvFrom }}
     {{- range $key, $value := .data }}
-  {{ $key }}: {{ $value | quote }}
+  {{ $key }}: {{ $value | default "" | quote }}
     {{- end }}
-  {{- else }}
+  {{- else if .envVars }}
+    {{- range .envVars }}
+  {{ .key }}: {{ .envName | quote }}
+    {{- end }}
+  {{- else if and .fileName .data }}
   {{ .fileName }}: |-
-{{ .data | indent 4 }}
+    {{- if kindIs "string" .data }}
+    {{- .data | nindent 4 }}
+    {{- else if kindIs "map" .data }}
+    {{- toYaml .data | nindent 4 }}
+    {{- else }}
+    {{- .data | toString | nindent 4 }}
+    {{- end }}
   {{- end }}
 {{- end }}
 {{- end }}

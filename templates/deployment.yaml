@@ -70,6 +70,33 @@ spec:
             - secretRef:
                 name: "{{ include "default-app.externalSecretName" . }}"
             {{- end }}
+          env:
+            {{- range .Values.secrets }}
+            {{- if and .enabled (not .mountPath) }}
+            {{- $secretName := .name }}
+            {{- range .envVars }}
+            - name: "{{ .envName }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $secretName }}"
+                  key: "{{ .key }}"
+                  optional: {{ .optional | default true }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.configs }}
+            {{- if and .enabled (not .mountPath) }}
+            {{- $configName := .name }}
+            {{- range .envVars }}
+            - name: "{{ .envName }}"
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ $configName }}"
+                  key: "{{ .key }}"
+                  optional: {{ .optional | default true }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -109,7 +136,7 @@ spec:
             {{- end }}
       volumes:
         {{- range .Values.configs }}
-        {{- if .enabled }}
+        {{- if and .enabled .mountPath }}
         - name: "{{ .name }}-volume"
           configMap:
             name: "{{ .name }}"

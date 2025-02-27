@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.9 (2025-02-27)
+* [default-app] - realized env params via cm and secrets with used keys and var names;
+
 ## 0.1.8 (2025-02-25)
 * [default-app] - added multiple cm with separate data; added multiple secret with separate data; fixes volume params for cm, secrets;
 
