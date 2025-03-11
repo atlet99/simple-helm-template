@@ -2,9 +2,9 @@ apiVersion: v1
 entries:
   default-app:
   - apiVersion: v2
-    created: "2025-03-12T02:19:53.601523+05:00"
+    created: "2025-03-12T02:56:04.777711+05:00"
     description: A Helm chart for Kubernetes
-    digest: 4ec04b54c5a3e99651eb3784172d46d07b62295d9880a0f8372fc849b0b9d09a
+    digest: 9902aaf26cd22e8f4d3fa193f7358517a3b432181534482d14abca79e8d41f9b
     icon: https://raw.githubusercontent.com/atlet99/simple-helm-template/refs/heads/main/icon/atlet99-logo.png
     maintainers:
     - email: abdurakhman.rakhmankulov@gmail.com
@@ -12,6 +12,6 @@ entries:
     name: default-app
     type: application
     urls:
-    - https://atlet99.github.io/simple-helm-template/default-app-0.1.9.tgz
+    - https://atlet99.github.io/simple-helm-template/charts/default-app-0.1.9.tgz
     version: 0.1.9
-generated: "2025-03-12T02:19:53.600462+05:00"
+generated: "2025-03-12T02:56:04.77708+05:00"
