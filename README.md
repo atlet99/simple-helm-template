@@ -34,7 +34,7 @@ helm pull simple-chart/default-app --version 0.1.9
 To upgrade the application with new parameters:
 
 ```sh
-helm upgrade my-app your-repo/default-app -f values.yaml
+helm upgrade my-app simple-chart/default-app -f values.yaml
 ```
 
 ## Uninstallation
