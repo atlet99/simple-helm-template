@@ -24,7 +24,7 @@ helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 
 
 ## Checking
 
-To check pulling archive:
+Verify the chart archive download:
 ```sh
 helm pull simple-chart/default-app --version 0.1.9
 ```
@@ -57,8 +57,13 @@ image:
   tag: "latest"
   pullPolicy: IfNotPresent
 
+serviceAccount:
+  create: true
+  automount: false
+
 ingress:
   enabled: false
+  className: "nginx"
   hosts:
     - host: app.example.com
       paths:
@@ -78,6 +83,15 @@ autoscaling:
   enabled: false
   minReplicas: 1
   maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        targetAverageUtilization: 75
+    - type: Resource
+      resource:
+        name: memory
+        targetAverageValue: 512Mi
 
 env:
   - name: APP_ENV
@@ -99,7 +113,7 @@ persistent:
     storageClass: "fast-storage"
     accessModes:
       - ReadWriteMany
-  mountPath: "/custom-path"
+  mountPath: "/data"
   readOnly: false
 ```
 
@@ -134,6 +148,84 @@ Enable logging with Loki:
 logging:
   enabled: true
   provider: loki
+```
+
+## External Secrets
+
+This chart supports external secrets using External Secret Operator (ESO):
+```yaml
+externalSecrets:
+  enabled: true
+  name: "app-external-secret"
+  secretStoreName: "default-secret-store"
+  kind: "SecretStore"
+  k8sSecretName: "app-secret"
+  refreshInterval: "1h"
+  data:
+    - secretKey: "DB_PASSWORD"
+      remoteKey: "secrets/app-secret"
+      property: "db_password"
+```
+
+## Configuration with ConfigMaps
+
+This chart allows you to define ConfigMaps to store environment variables, application configurations, or any required files.
+
+Example ConfigMap configuration:
+```yaml
+configs:
+  appConfig:
+    enabled: true
+    name: "app-config"
+    mountPath: "/config/app"
+    fileName: "app-config.yaml"
+    readOnly: false
+    data: |
+      user nginx;
+      worker_processes auto;
+      events { worker_connections 1024; }
+      http {
+        server {
+          listen 80;
+          server_name localhost;
+          location / {
+            root /usr/share/nginx/html;
+            index index.html index.htm;
+          }
+        }
+      }
+```
+
+In the deployment, ConfigMaps can be mounted as files inside the container or used as environment variables.
+```yaml
+envFrom:
+  - configMapRef:
+      name: "app-config"
+```
+
+## Handling Sensitive Data with Secrets
+
+This Helm chart supports Kubernetes Secrets to securely manage sensitive information such as API keys, database passwords, and authentication credentials.
+
+Example Secret configuration:
+```yaml
+secrets:
+  dbSecret:
+    enabled: true
+    name: "db-secret"
+    mountPath: "/config/db-secret"
+    fileName: "db-secret.yaml"
+    readOnly: true
+    data: |
+      DB_USER: "postgres"
+      DB_PASS: "supersecret"
+```
+
+Secrets can also be injected as environment variables:
+```yaml
+envFrom:
+  - secretRef:
+      name: "db-secret"
 ```
 
 ## Termination Grace Period
