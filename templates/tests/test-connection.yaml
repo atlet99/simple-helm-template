@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "default-app.fullname" . }}-test-connection"
+  namespace: {{ include "default-app.namespace" . }}
+  labels:
+    {{- include "default-app.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command:
+        - sh
+        - "-c"
+      args:
+        {{- if eq (len .Values.service.ports) 1 }}
+        - "wget --spider http://{{ include "default-app.fullname" . }}:{{ (index .Values.service.ports 0).port }}"
+        {{- else }}
+        - >
+          {{ range .Values.service.ports }}
+          wget --spider http://{{ $.Release.Name }}-{{ $.Chart.Name }}:{{ .port }} || exit 1;
+          {{ end }}
+        {{- end }}
+  restartPolicy: Never
