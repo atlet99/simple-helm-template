@@ -4,12 +4,7 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'Chart.yaml'
-      - 'values.yaml'
-      - 'templates/**'
-      - 'icon/**'
-      - '.github/workflows/helm-publish.yaml'
+      - master
 
 permissions:
   contents: write

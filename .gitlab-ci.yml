@@ -21,6 +21,7 @@ release:
   variables:
     HELM_PACKAGE_OUTPUT: "helm/outputs"
     HELM_CHANNEL: stable
+    CHART_PATH: charts/default-app
   rules:
     - if: '$CI_COMMIT_BRANCH == "master" || $CI_COMMIT_BRANCH == "main"'
       when: always
