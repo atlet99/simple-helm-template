@@ -7,7 +7,7 @@ This Helm Chart is designed to deploy applications in Kubernetes, providing a st
 Ensure that Helm is installed and that you have access to a Kubernetes cluster before proceeding with the installation.
 
 ```sh
-helm repo add simple-chart https://atlet99.github.io/simple-helm-template/charts
+helm repo add simple-chart https://atlet99.github.io/simple-helm-template
 helm repo update
 ```
 
