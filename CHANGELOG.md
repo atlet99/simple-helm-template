@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.1.9 (2025-03-12)
-* [default-app] - added gh workflows for releasing public OCI repo; fix yml to yaml;
+* [default-app] - added gh workflows for releasing public OCI repo; fix yml to yaml; fix manual commit to gh-pages;
 
 ## 0.1.9 (2025-02-27)
 * [default-app] - realized env params via cm and secrets with used keys and var names; fix: - comments examples; added externalSecrets params, checks (without dry-run mode) and minor fixes in volumes;

@@ -35,25 +35,19 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
+      - name: Cache Helm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.cache/helm
+          key: helm-${{ runner.os }}-${{ hashFiles('Chart.yaml') }}
+          restore-keys: |
+            helm-${{ runner.os }}
+
       - name: Package Helm Chart
         run: |
+          chart_dir="."
           mkdir -p .cr-release-packages
-          helm package . --destination .cr-release-packages
-
-      - name: Checkout gh-pages
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
-          path: gh-pages
-
-      - name: Update Helm repo index
-        run: |
-          cd gh-pages
-          mv ../.cr-release-packages/* .
-          helm repo index --url https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/ --merge index.yaml
-          git add .
-          git commit -m "Update Helm repository index"
-          git push origin gh-pages
+          helm package "$chart_dir" --destination .cr-release-packages
 
       - name: Run chart-releaser
         uses: helm/chart-releaser-action@v1.7.0
