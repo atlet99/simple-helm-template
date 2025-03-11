@@ -9,7 +9,7 @@ on:
       - 'values.yaml'
       - 'templates/**'
       - 'icon/**'
-      - '.github/workflows/release.yml'
+      - '.github/workflows/helm-publish.yaml'
 
 permissions:
   contents: write
