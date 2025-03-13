@@ -216,22 +216,22 @@ secrets: {}
 
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
 # example:
-externalSecrets:
-  appExternalSecret:
-    enabled: true
-    name: "app-external-secret"
-    secretStoreName: "default-secret-store"
-    kind: "SecretStore"
-    k8sSecretName: "app-secret"
-    refreshInterval: "1h"
-    dataFrom:
-      key: "secrets/app-secret"
-    templateData:
-      app-secret.conf: |
-        DB_USER={{ .username }}
-        DB_PASSWORD={{ .password }}
-    mountPath: "/secret/app"
-    readOnly: true
+# externalSecrets:
+#   appExternalSecret:
+#     enabled: true
+#     name: "app-external-secret"
+#     secretStoreName: "default-secret-store"
+#     kind: "SecretStore"
+#     k8sSecretName: "app-secret"
+#     refreshInterval: "1h"
+#     dataFrom:
+#       key: "secrets/app-secret"
+#     templateData:
+#       app-secret.conf: |
+#         DB_USER={{ .username }}
+#         DB_PASSWORD={{ .password }}
+#     mountPath: "/secret/app"
+#     readOnly: true
 #   dbExternalSecret:
 #     enabled: true
 #     name: "db-external-secret"
@@ -273,7 +273,7 @@ externalSecrets:
 #     templateFrom:
 #       configMap: "app-config-tmpl"
 #       key: "config.yml"
-# externalSecrets: {}
+externalSecrets: {}
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe: {}

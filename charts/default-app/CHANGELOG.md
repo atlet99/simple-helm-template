@@ -1,7 +1,7 @@
 # Changelog
 
 ## 0.2.0 (2025-03-13)
-* [default-app] - added new conditions for creation specific resources like a standalone, for example, only deployment, only external-secrets;
+* [default-app] - added new conditions for creation specific resources like a standalone, for example, only deployment, only external-secrets; fix values;
 
 ## 0.1.9 (2025-03-12)
 * [default-app] - added gh workflows for releasing public OCI repo; fix yml to yaml; fix manual commit to gh-pages; fix workflow params; fix structure issue;
