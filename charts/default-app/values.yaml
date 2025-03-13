@@ -10,7 +10,7 @@ replicaCount: 1
 
 # This sets the container image more information can be found here: https://kubernetes.io/docs/concepts/containers/images/
 image:
-  repository: nginx
+  repository: {}
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
@@ -31,7 +31,7 @@ namespaceOverride: ""
 # This section builds out the service account more information can be found here: https://kubernetes.io/docs/concepts/security/service-accounts/
 serviceAccount:
   # Specifies whether a service account should be created
-  create: true
+  create: false
   # Automatically mount a ServiceAccount's API credentials?
   automount: false
   # Annotations to add to the service account
@@ -66,10 +66,10 @@ podSecurityContext: {}
 # This is for setting up a service more information can be found here: https://kubernetes.io/docs/concepts/services-networking/service/
 service:
   type: ClusterIP
-  ports:
-    - port: 80
-      targetPort: http
-      name: http
+  ports: []
+    # - port: 80
+    #   targetPort: http
+    #   name: http
 
 # This block is for setting up the ingress for more information can be found here: https://kubernetes.io/docs/concepts/services-networking/ingress/
 ingress:
@@ -216,22 +216,22 @@ secrets: {}
 
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
 # example:
-# externalSecrets:
-#   appExternalSecret:
-#     enabled: true
-#     name: "app-external-secret"
-#     secretStoreName: "default-secret-store"
-#     kind: "SecretStore"
-#     k8sSecretName: "app-secret"
-#     refreshInterval: "1h"
-#     dataFrom:
-#       key: "secrets/app-secret"
-#     templateData:
-#       app-secret.conf: |
-#         DB_USER={{ .username }}
-#         DB_PASSWORD={{ .password }}
-#     mountPath: "/secret/app"
-#     readOnly: true
+externalSecrets:
+  appExternalSecret:
+    enabled: true
+    name: "app-external-secret"
+    secretStoreName: "default-secret-store"
+    kind: "SecretStore"
+    k8sSecretName: "app-secret"
+    refreshInterval: "1h"
+    dataFrom:
+      key: "secrets/app-secret"
+    templateData:
+      app-secret.conf: |
+        DB_USER={{ .username }}
+        DB_PASSWORD={{ .password }}
+    mountPath: "/secret/app"
+    readOnly: true
 #   dbExternalSecret:
 #     enabled: true
 #     name: "db-external-secret"
@@ -273,7 +273,7 @@ secrets: {}
 #     templateFrom:
 #       configMap: "app-config-tmpl"
 #       key: "config.yml"
-externalSecrets: {}
+# externalSecrets: {}
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe: {}

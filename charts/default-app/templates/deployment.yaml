@@ -1,3 +1,4 @@
+{{- if .Values.image.repository }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -192,3 +193,4 @@ spec:
       {{- end }}
       priorityClassName: {{ .Values.priorityClassName | default "" }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 30 }}
+{{- end }}
