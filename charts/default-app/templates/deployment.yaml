@@ -31,7 +31,9 @@ spec:
       imagePullSecrets:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+      {{- if .Values.serviceAccount.create }}
       serviceAccountName: "{{ include "default-app.serviceAccountName" . }}"
+      {{- end }}
       {{- with .Values.podSecurityContext }}
       securityContext:
         {{- toYaml . | nindent 8 }}
@@ -161,14 +163,14 @@ spec:
         {{- end }}
         {{- end }}
         {{- range .Values.secrets }}
-        {{- if .enabled }}
+        {{- if and .enabled .mountPath }}
         - name: "{{ .name }}-secret-volume"
           secret:
             secretName: "{{ .name }}"
         {{- end }}
         {{- end }}
         {{- range .Values.externalSecrets }}
-        {{- if .enabled }}
+        {{- if and .enabled .mountPath }}
         - name: "{{ .name }}-ext-sec-vl"
           secret:
             secretName: "{{ .name }}"

@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.1 (2025-03-14)
+* [default-app] - fix issue with SA; added conditions for mountPath and vl includes in secrets and externalSecrets;
+
 ## 0.2.0 (2025-03-13)
 * [default-app] - added new conditions for creation specific resources like a standalone, for example, only deployment, only external-secrets; fix values;
 
