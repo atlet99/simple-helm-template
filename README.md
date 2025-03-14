@@ -19,14 +19,14 @@ helm install my-app simple-chart/default-app -f values.yaml
 
 To install the application with specific version:
 ```sh
-helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.1.9 --atomic
+helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.2.2 --atomic
 ```
 
 ## Checking
 
 Verify the chart archive download:
 ```sh
-helm pull simple-chart/default-app --version 0.1.9
+helm pull simple-chart/default-app --version 0.2.2
 ```
 
 ## Upgrading
