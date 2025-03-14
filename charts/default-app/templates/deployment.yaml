@@ -115,6 +115,36 @@ spec:
             {{- end }}
             {{- end }}
             {{- end }}
+            {{- range .Values.configs }}
+            {{- if and .enabled .mountPath .subPathExpr .subPathExprFieldPath }}
+            {{- $fieldPath := .subPathExprFieldPath }}
+            - name: "{{ .subPathExpr }}"
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: "{{ $fieldPath }}"
+            {{- end }}
+            {{- end }}
+            {{- range .Values.secrets }}
+            {{- if and .enabled .mountPath .subPathExpr .subPathExprFieldPath }}
+            {{- $fieldPath := .subPathExprFieldPath }}
+            - name: "{{ .subPathExpr }}"
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: "{{ $fieldPath }}"
+            {{- end }}
+            {{- end }}
+            {{- range .Values.externalSecrets }}
+            {{- if and .enabled .mountPath .subPathExpr .subPathExprFieldPath }}
+            {{- $fieldPath := .subPathExprFieldPath }}
+            - name: "{{ .subPathExpr }}"
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: "{{ $fieldPath }}"
+            {{- end }}
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -132,6 +162,11 @@ spec:
             {{- if and .enabled .mountPath }}
             - name: "{{ .name }}-volume"
               mountPath: "{{ .mountPath }}"
+              {{- if .subPath }}
+              subPath: "{{ .subPath }}"
+              {{- else if .subPathExpr }}
+              subPathExpr: "{{ .subPathExpr }}"
+              {{- end }}
               readOnly: {{ .readOnly | default false | toString | lower }}
             {{- end }}
             {{- end }}
@@ -139,6 +174,11 @@ spec:
             {{- if and .enabled .mountPath }}
             - name: "{{ .name }}-secret-volume"
               mountPath: "{{ .mountPath }}"
+              {{- if .subPath }}
+              subPath: "{{ .subPath }}"
+              {{- else if .subPathExpr }}
+              subPathExpr: "{{ .subPathExpr }}"
+              {{- end }}
               readOnly: {{ .readOnly | default true | toString | lower }}
             {{- end }}
             {{- end }}
@@ -146,6 +186,11 @@ spec:
             {{- if and .enabled .mountPath }}
             - name: "{{ .name }}-ext-sec-vl"
               mountPath: {{ .mountPath }}
+              {{- if .subPath }}
+              subPath: "{{ .subPath }}"
+              {{- else if .subPathExpr }}
+              subPathExpr: "{{ .subPathExpr }}"
+              {{- end }}
               readOnly: {{ .readOnly | default true | toString | lower }}
             {{- end }}
             {{- end }}
@@ -193,6 +238,8 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
-      priorityClassName: {{ .Values.priorityClassName | default "" }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
       terminationGracePeriodSeconds: {{ .Values.terminationGracePeriodSeconds | default 30 }}
 {{- end }}

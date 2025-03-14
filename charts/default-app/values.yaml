@@ -172,6 +172,37 @@ resources: {}
 #       - envName: "API_VERSION"
 #         key: "v3"
 #         optional: false
+#   configWithSubPath:
+#     enabled: true
+#     name: "config-with-sub-path"
+#     mountPath: "/config/app"
+#     subPath: "app-config.yaml"
+#     fileName: "app-config.yaml"
+#     readOnly: false
+#     data: |
+#       user nginx;
+#       worker_proccess auto;
+#       events { worker_connections 1024; }
+#       http {
+#         server {
+#       }
+#       }
+#   configWithSubPathExpr:
+#     enabled: true
+#     name: "config-with-sub-path-expr"
+#     mountPath: "/config/app"
+#     subPathExpr: "$(POD_NAME)"
+#     subPathExprFieldPath: "metadata.name"
+#     fileName: "app-config.yaml"
+#     readOnly: false
+#     data: |
+#       user nginx;
+#       worker_proccess auto;
+#       events { worker_connections 1024; }
+#       http {
+#         server {
+#       }
+#       }
 configs: {}
 
 # This is to setup the secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
@@ -212,6 +243,49 @@ configs: {}
 #       - envName: "DB_PASSWORD"
 #         key: "password"
 #         optional: false
+#   configWithSubPath:
+#     enabled: true
+#     name: "config-with-sub-path"
+#     mountPath: "/config/app"
+#     subPath: "app-config.yaml"
+#     fileName: "app-config.yaml"
+#     readOnly: false
+#     data: |
+#       user nginx;
+#       worker_proccess auto;
+#       events { worker_connections 1024; }
+#       http {
+#         server {
+#           listen 80;
+#           server_name localhost;
+#           location / {
+#             root /usr/share/nginx/html;
+#             index index.html index.htm;
+#           }
+#         }
+#       }
+#   configWithSubPathExpr:
+#     enabled: true
+#     name: "config-with-sub-path-expr"
+#     mountPath: "/config/app"
+#     subPathExpr: "$(POD_NAME)"
+#     subPathExprFieldPath: "metadata.name"
+#     fileName: "app-config.yaml"
+#     readOnly: false
+#     data: |
+#       user nginx;
+#       worker_proccess auto;
+#       events { worker_connections 1024; }
+#       http {
+#         server {
+#           listen 80;
+#           server_name localhost;
+#           location / {
+#             root /usr/share/nginx/html;
+#             index index.html index.htm;
+#           }
+#         }
+#       }
 secrets: {}
 
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
@@ -273,6 +347,35 @@ secrets: {}
 #     templateFrom:
 #       configMap: "app-config-tmpl"
 #       key: "config.yml"
+#   configWithSubPath:
+#     enabled: true
+#     name: "config-with-sub-path"
+#     secretStoreName: "default-secret-store"
+#     kind: "SecretStore"
+#     k8sSecretName: "config-sub-path"
+#     refreshInterval: "1h"
+#     data:
+#       - secretKey: "DB_USER"
+#         remoteRef:
+#           key: "secrets/config-sub-path"
+#     mountPath: "/config/app"
+#     subPath: "app-config.yaml"
+#     readOnly: false
+#   configWithSubPathExpr:
+#     enabled: true
+#     name: "config-with-sub-path-expr"
+#     secretStoreName: "default-secret-store"
+#     kind: "SecretStore"
+#     k8sSecretName: "config-sub-path-expr"
+#     refreshInterval: "1h"
+#     data:
+#       - secretKey: "DB_USER"
+#         remoteRef:
+#           key: "secrets/config-sub-path-expr"
+#     mountPath: "/config/app"
+#     subPathExpr: "$(POD_NAME)"
+#     subPathExprFieldPath: "metadata.name"
+#     readOnly: false
 externalSecrets: {}
 
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
