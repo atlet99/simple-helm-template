@@ -56,6 +56,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if or .Values.configs .Values.secrets .Values.externalSecrets }}
           envFrom:
             {{- range .Values.configs }}
             {{- if and .enabled .useEnvFrom (not .mountPath) }}
@@ -75,6 +76,8 @@ spec:
                 name: "{{ .name }}"
             {{- end }}
             {{- end }}
+          {{- end }}
+          {{- if or .Values.configs .Values.secrets .Values.externalSecrets }}
           env:
             {{- range .Values.externalSecrets }}
             {{- if and .enabled (not .mountPath) }}
@@ -145,6 +148,7 @@ spec:
                   fieldPath: "{{ $fieldPath }}"
             {{- end }}
             {{- end }}
+          {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -157,6 +161,7 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+          {{- if or .Values.configs .Values.secrets .Values.externalSecrets .Values.persistent.enabled }}
           volumeMounts:
             {{- range .Values.configs }}
             {{- if and .enabled .mountPath }}
@@ -199,6 +204,40 @@ spec:
               mountPath: {{ .Values.persistent.mountPath | default "/data" }}
               readOnly: {{ .Values.persistent.readOnly | default false | toString | lower }}
             {{- end }}
+          {{- end }}
+      {{- if .Values.initContainers }}
+      initContainers:
+        {{- range .Values.initContainers }}
+        - name: {{ .name }}
+          image: "{{ .image }}"
+          imagePullPolicy: {{ .imagePullPolicy | default "IfNotPresent" }}
+          {{- with .command }}
+          command:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .args }}
+          args:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .env }}
+          env:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .envFrom }}
+          envFrom:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .volumeMounts }}
+          volumeMounts:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          {{- with .resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      {{- if or .Values.configs .Values.secrets .Values.externalSecrets .Values.persistent.enabled }}
       volumes:
         {{- range .Values.configs }}
         {{- if and .enabled .mountPath }}
@@ -226,6 +265,7 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
         {{- end }}
+      {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

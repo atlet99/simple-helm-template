@@ -388,6 +388,33 @@ readinessProbe: {}
   #   path: /
   #   port: http
 
+# Init containers are containers that run before the main container starts.
+# More information can be found here: https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+# example:
+# initContainers:
+#   - name: init-db
+#     image: busybox
+#     imagePullPolicy: IfNotPresent
+#     command: ['sh', '-c', 'until nc -z db-service 5432; do echo waiting for db; sleep 2; done;']
+#     args: []
+#     env:
+#       - name: DATABASE_URL
+#         value: "postgres://user:password@db-service:5432/app"
+#     envFrom:
+#       - configMapRef:
+#           name: env-config
+#     volumeMounts:
+#       - name: shared-data
+#         mountPath: /data
+#     resources:
+#       limits:
+#         cpu: 100m
+#         memory: 128Mi
+#       requests:
+#         cpu: 50m
+#         memory: 64Mi
+initContainers: []
+
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
   enabled: false

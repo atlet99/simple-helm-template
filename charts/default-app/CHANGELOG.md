@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2 (2025-03-14)
+* [default-app] - added init containers and includes minor fixes connect to volumes and vl mounts;
+
 ## 0.2.1 (2025-03-14)
 * [default-app] - fix issue with SA; added conditions for mountPath and vl includes in secrets and externalSecrets; added subPath and subPathExpr, minor fixes;
 
