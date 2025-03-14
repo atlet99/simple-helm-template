@@ -24,6 +24,11 @@ helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 
 
 ## Checking
 
+Check available versions of the chart:
+```sh
+helm search repo simple-chart/default-app --versions
+```
+
 Verify the chart archive download:
 ```sh
 helm pull simple-chart/default-app --version 0.2.2
