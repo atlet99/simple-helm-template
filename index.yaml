@@ -2,9 +2,9 @@ apiVersion: v1
 entries:
   default-app:
   - apiVersion: v2
-    created: "2025-03-14T19:03:45.392475+05:00"
+    created: "2025-03-14T20:39:22.496524+05:00"
     description: A Helm chart for Kubernetes
-    digest: 37b7456d8e21b5189da0a48fe94611aef2a74988fbe9bd509c93fd29f83798b1
+    digest: b0296659787aec21af01caa2bb9ff6eb0162ddd9af193e1e42c46f8747cc0bf0
     icon: https://raw.githubusercontent.com/atlet99/simple-helm-template/refs/heads/main/icon/atlet99-logo.png
     maintainers:
     - email: abdurakhman.rakhmankulov@gmail.com
@@ -15,7 +15,7 @@ entries:
     - https://atlet99.github.io/simple-helm-template/default-app-0.2.1.tgz
     version: 0.2.1
   - apiVersion: v2
-    created: "2025-03-14T19:03:45.391899+05:00"
+    created: "2025-03-14T20:39:22.495772+05:00"
     description: A Helm chart for Kubernetes
     digest: 8e551bc85a26037a1d9675909a4a98ee0c83f00406fab0004676a04a3b6d9d6c
     icon: https://raw.githubusercontent.com/atlet99/simple-helm-template/refs/heads/main/icon/atlet99-logo.png
@@ -28,7 +28,7 @@ entries:
     - https://atlet99.github.io/simple-helm-template/default-app-0.2.0.tgz
     version: 0.2.0
   - apiVersion: v2
-    created: "2025-03-14T19:03:45.391406+05:00"
+    created: "2025-03-14T20:39:22.494805+05:00"
     description: A Helm chart for Kubernetes
     digest: ccd34e40a3bb2b7a03769a5b16b89cc9c6c8bcb291c1e968051d5456844bf85a
     icon: https://raw.githubusercontent.com/atlet99/simple-helm-template/refs/heads/main/icon/atlet99-logo.png
@@ -40,4 +40,4 @@ entries:
     urls:
     - https://atlet99.github.io/simple-helm-template/default-app-0.1.9.tgz
     version: 0.1.9
-generated: "2025-03-14T19:03:45.390755+05:00"
+generated: "2025-03-14T20:39:22.494101+05:00"
