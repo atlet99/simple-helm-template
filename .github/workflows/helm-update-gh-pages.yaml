@@ -40,10 +40,7 @@ jobs:
         with:
           name: helm-packages
           path: .cr-release-packages/
-          merge-multiple: true
-          repository: ${{ github.repository }}
-          run-id: ${{ env.RUN_ID }}
-      
+
       - name: Display Helm Packages
         run: ls -R .cr-release-packages/
 
