@@ -6,6 +6,9 @@ on:
     types:
       - completed
 
+permissions:
+  contents: write
+
 jobs:
   update-index:
     runs-on: ubuntu-latest
@@ -19,32 +22,24 @@ jobs:
       - name: Fetch history
         run: git fetch --prune --unshallow
 
-      - name: Download new Helm package
-        uses: actions/download-artifact@v4
-        with:
-          name: helm-chart-packages
-          path: .cr-release-packages/
-
       - name: Configure Git
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v4.3.0
-        with:
-          version: v3.17.0
+      - name: Install Chart Releaser
+        run: |
+          curl -sSL -o /usr/local/bin/cr https://github.com/helm/chart-releaser/releases/latest/download/chart-releaser_$(uname -s)_$(uname -m)
+          chmod +x /usr/local/bin/cr
 
-      - name: Move new chart to repository
+      - name: Run Chart Releaser Index
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          mv .cr-release-packages/*.tgz .
-      
-      - name: Update Helm repo index
-        run: |
-          helm repo index . --url https://atlet99.github.io/simple-helm-template --merge index.yaml
+          cr index --owner "${{ github.repository_owner }}" --git-repo "$(basename ${{ github.repository }})" --packages-with-index --index-path . --token "${{ secrets.GITHUB_TOKEN }}" --push
 
       - name: Commit and push changes
         run: |
-          git add .
+          git add index.yaml
           git commit -m "Update Helm repo index"
           git push origin gh-pages
