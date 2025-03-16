@@ -39,9 +39,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: helm-packages
-          path: .cr-release-packages
+          path: .cr-release-packages/
+          pattern: "*.tgz"
           repository: ${{ github.repository }}
           run-id: ${{ env.RUN_ID }}
+      
+      - name: Display Helm Packages
+        run: ls -R .cr-release-packages/
 
       - name: Install Chart Releaser
         run: |
