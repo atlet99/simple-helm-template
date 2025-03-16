@@ -31,14 +31,17 @@ jobs:
         run: |
           ARCH=$(uname -m)
           OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-          CR_VERSION=$(curl -s https://api.github.com/repos/helm/chart-releaser/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
-          CR_BINARY="chart-releaser_${OS}_${ARCH}"
-          
-          curl -sSL -o cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/${CR_VERSION}/${CR_BINARY}.tar.gz"
-          tar -xzf cr.tar.gz
-          chmod +x cr
-          sudo mv cr /usr/local/bin/
-          
+          CR_VERSION=$(curl -s https://api.github.com/repos/helm/chart-releaser/releases/latest | jq -r '.tag_name')
+
+          CR_BINARY="chart-releaser_${CR_VERSION}_${OS}_${ARCH}.tar.gz"
+          DOWNLOAD_URL="https://github.com/helm/chart-releaser/releases/download/${CR_VERSION}/${CR_BINARY}"
+
+          echo "Downloading Chart Releaser from $DOWNLOAD_URL"
+          curl -fsSL -o cr.tar.gz "$DOWNLOAD_URL" || { echo "Failed to download"; exit 1; }
+          tar -xzf cr.tar.gz || { echo "Failed to extract"; exit 1; }
+          chmod +x chart-releaser
+          sudo mv chart-releaser /usr/local/bin/cr
+          echo "Chart Releaser installed successfully:"
           cr --version
 
       - name: Run Chart Releaser Index
