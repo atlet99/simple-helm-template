@@ -61,7 +61,7 @@ jobs:
       - name: Commit and push changes
         run: |
           echo "Cleaning up unnecessary files..."
-          find . -maxdepth 1 ! -name "index.yaml" ! -name "." -exec rm -rf {} +
+          find . -maxdepth 1 ! -name "index.yaml" ! -name ".git" ! -name ".github" ! -name ".gitignore" ! -name "." -exec rm -rf {} +
           echo "Checking if index.yaml has changed..."
           git status
           if git diff --quiet index.yaml; then
