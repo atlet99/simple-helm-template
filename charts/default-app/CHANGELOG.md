@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3 (2025-03-17)
+* [default-app] - fix ns for secretStoreRef in externalSecrets; upd README; added pv; upd pvc mechanism;
+
 ## 0.2.2 (2025-03-14)
 * [default-app] - added init containers and includes minor fixes connect to volumes and vl mounts;
 

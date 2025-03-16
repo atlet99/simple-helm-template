@@ -439,24 +439,62 @@ autoscaling:
 # This section is for setting up persistent storage more information can be found here: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 # enabled is a boolean that determines whether the persistent volume is enabled or not.
 # pvc is a dictionary that contains the name and other options for the persistent volume claim.
-# example:
+# example_1:
 # persistent:
-#   enabled: true
+#   pv:
+#     enabled: false
 #   pvc:
 #     name: "custom-pvc"
 #     size: 10Gi
 #     storageClass: "csi-cinder-ssd-delete"
 #     accessModes:
 #       - ReadWriteMany
+# example_2:
+# persistent:
+#   pv:
+#     enabled: true
+#     name: "custom-pv"
+#     size: 10Gi
+#     storageClass: "manual"
+#     volumeMode: "Filesystem"
+#     accessModes:
+#       - ReadWriteOnce
+#     reclaimPolicy: "Retain"
+#     nodeAffinity: []
+#     hostPath: "/mnt/data"
+#     annotations: {}
+#   pvc:
+#     enabled: true
+#     name: "custom-pvc"
+#     size: 10Gi
+#     storageClass: "manual"
+#     volumeMode: "Filesystem"
+#     accessModes:
+#       - ReadWriteOnce
+#     annotations: {}
+#   mountPath: "/custom-path"
+#   readOnly: false
 persistent:
-  enabled: false
+  pv:
+    enabled: false
+    name: "custom-pv"
+    size: 10Gi
+    accessModes:
+      - ReadWriteOnce
+    storageClass: "manual"
+    reclaimPolicy: "Retain"
+    volumeMode: "Filesystem"
+    nodeAffinity: []
+    annotations: {}
   pvc:
+    enabled: false
     name: "custom-pvc"
     size: 10Gi
-    storageClass: ""
-    annotations: {}
+    storageClass: "manual"
+    volumeMode: "Filesystem"
     accessModes:
-      - ReadWriteMany
+      - ReadWriteOnce
+    annotations: {}
   mountPath: "/custom-path"
   readOnly: false
 

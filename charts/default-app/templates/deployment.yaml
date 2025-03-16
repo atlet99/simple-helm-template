@@ -199,7 +199,7 @@ spec:
               readOnly: {{ .readOnly | default true | toString | lower }}
             {{- end }}
             {{- end }}
-            {{- if .Values.persistent.enabled }}
+            {{- if .Values.persistent.pvc.enabled }}
             - name: persistent-storage
               mountPath: {{ .Values.persistent.mountPath | default "/data" }}
               readOnly: {{ .Values.persistent.readOnly | default false | toString | lower }}
@@ -260,7 +260,7 @@ spec:
             secretName: "{{ .name }}"
         {{- end }}
         {{- end }}
-        {{- if .Values.persistent.enabled }}
+        {{- if .Values.persistent.pvc.enabled }}
         - name: persistent-storage
           persistentVolumeClaim:
             claimName: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}

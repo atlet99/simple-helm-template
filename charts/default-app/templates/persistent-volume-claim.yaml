@@ -1,4 +1,4 @@
-{{- if .Values.persistent.enabled }}
+{{- if .Values.persistent.pvc.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -12,11 +12,16 @@ metadata:
   {{- end }}
 spec:
   accessModes:
-    {{- toYaml .Values.persistent.pvc.accessModes | nindent 2 }}
+    {{- toYaml .Values.persistent.pvc.accessModes | nindent 2 | default "ReadWriteOnce" }}
+  {{- if .Values.persistent.pvc.volumeMode }}
+  volumeMode: {{ .Values.persistent.pvc.volumeMode }}
+  {{- end }}
   resources:
     requests:
-      storage: {{ .Values.persistent.pvc.size }}
+      storage: {{ .Values.persistent.pvc.size | default "1Gi" }}
   {{- if .Values.persistent.pvc.storageClass }}
   storageClassName: {{ .Values.persistent.pvc.storageClass }}
+  {{- else if .Values.persistent.pv.enabled }}
+  volumeName: {{ .Values.persistent.pv.name | default (include "default-app.fullname" .) }}
   {{- end }}
 {{- end }}

@@ -1,0 +1,38 @@
+{{- if .Values.persistent.pv.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+    name: {{ .Values.persistent.pv.name | default (include "default-app.fullname" .) }}
+    labels:
+        {{- include "default-app.labels" . | nindent 4 }}
+    {{- with .Values.persistent.pv.annotations }}
+    annotations:
+        {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+    capacity:
+        storage: {{ .Values.persistent.pv.size | default "1Gi" }}
+    {{- if .Values.persistent.pv.volumeMode }}
+    volumeMode: {{ .Values.persistent.pv.volumeMode }}
+    {{- end }}
+    accessModes:
+        {{- toYaml .Values.persistent.pv.accessModes | nindent 2 }}
+    persistentVolumeReclaimPolicy: {{ .Values.persistent.pv.reclaimPolicy | default "Retain" }}
+    {{- if .Values.persistent.pv.storageClass }}
+    storageClassName: {{ .Values.persistent.pv.storageClass }}
+    {{- end }}
+    {{- if .Values.persistent.pv.nodeAffinity }}
+    nodeAffinity:
+        required:
+        nodeSelectorTerms:
+            - matchExpressions:
+                - key: kubernetes.io/hostname
+                operator: In
+                values:
+                    {{- toYaml .Values.persistent.pv.nodeAffinity | nindent 16 }}
+    {{- end }}
+    {{- if .Values.persistent.pv.hostPath}}
+    hostPath:
+        path: {{ .Values.persistent.pv.hostPath | default "/mnt/data" }}
+    {{- end }}
+{{- end }}
