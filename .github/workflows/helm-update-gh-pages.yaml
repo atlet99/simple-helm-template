@@ -33,20 +33,23 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-              const runs = await github.rest.actions.listWorkflowRuns({
-                owner: context.repo.owner,
-                repo: context.repo.repo,
-                workflow_id: "helm-publish.yaml",
-                branch: "main",
-                status: "completed",
-                per_page: 1
-              });
-              if (runs.data.workflow_runs.length > 0) {
-                const runId = runs.data.workflow_runs[0].id;
-                core.setOutput("RUN_ID", runId);
-              } else {
-                throw new Error("No completed workflow runs found.");
+            const runs = await github.rest.actions.listWorkflowRuns({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: "Release Helm Chart",
+              branch: "main",
+              status: "completed",
+              per_page: 5
+            });
+
+            for (const run of runs.data.workflow_runs) {
+              if (run.conclusion === "success") {
+                core.setOutput("RUN_ID", run.id);
+                return;
               }
+            }
+
+            throw new Error("No successful workflow runs found.");
 
       - name: Download Helm Packages
         uses: actions/download-artifact@v4.1.9
@@ -54,6 +57,7 @@ jobs:
           name: helm-packages
           path: .cr-release-packages/
           run-id: ${{ steps.get_run_id.outputs.RUN_ID }}
+          repository: ${{ github.repository }}
 
       - name: Display Helm Packages
         run: ls -R .cr-release-packages/
