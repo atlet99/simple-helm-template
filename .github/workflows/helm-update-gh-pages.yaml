@@ -49,6 +49,9 @@ jobs:
           chmod +x cr
           sudo mv cr /usr/local/bin/cr
 
+          echo "Cleaning up..."
+          rm -rf cr.tar.gz LICENSE README.md
+
           echo "Chart Releaser installed successfully:"
           cr version
 
@@ -60,8 +63,6 @@ jobs:
 
       - name: Commit and push changes
         run: |
-          echo "Cleaning up unnecessary files..."
-          find . -maxdepth 1 ! -name "index.yaml" ! -name ".git" ! -name ".github" ! -name ".gitignore" ! -name "." -exec rm -rf {} +
           echo "Checking if index.yaml has changed..."
           git status
           if git diff --quiet index.yaml; then
@@ -69,6 +70,6 @@ jobs:
             exit 0
           fi
           echo "Changes detected in index.yaml"
-          git add index.yaml
+          git add index.yaml *.tgz
           git commit -m "Update Helm repo index"
           git push origin gh-pages
