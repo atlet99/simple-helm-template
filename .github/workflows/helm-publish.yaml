@@ -65,7 +65,14 @@ jobs:
           cr package charts/default-app --package-path .cr-release-packages
 
       - name: Debug Helm Packages
-        run: ls -la .cr-release-packages
+        run: pwd && ls -la .cr-release-packages
+
+      - name: Save Helm Packages as Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: helm-packages
+          path: .cr-release-packages
+          retention-days: 1
 
       - name: Upload Helm Charts to GitHub Releases
         env:
@@ -76,13 +83,6 @@ jobs:
             --token "${{ secrets.GITHUB_TOKEN }}" \
             --package-path .cr-release-packages \
             --push --skip-existing --packages-with-index
-
-      - name: Save Helm Packages as Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: helm-packages
-          path: .cr-release-packages
-          retention-days: 1
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
