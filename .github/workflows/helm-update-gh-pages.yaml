@@ -50,7 +50,7 @@ jobs:
           sudo mv cr /usr/local/bin/cr
 
           echo "Chart Releaser installed successfully:"
-          cr --version
+          cr version
 
       - name: Run Chart Releaser Index
         env:
