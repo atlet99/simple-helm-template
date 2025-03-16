@@ -60,6 +60,15 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          echo "Cleaning up unnecessary files..."
+          find . -maxdepth 1 ! -name "index.yaml" ! -name "." -exec rm -rf {} +
+          echo "Checking if index.yaml has changed..."
+          git status
+          if git diff --quiet index.yaml; then
+            echo "No changes detected in index.yaml"
+            exit 0
+          fi
+          echo "Changes detected in index.yaml"
           git add index.yaml
           git commit -m "Update Helm repo index"
           git push origin gh-pages
