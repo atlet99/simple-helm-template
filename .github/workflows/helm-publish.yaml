@@ -65,14 +65,18 @@ jobs:
           cr package charts/default-app --package-path .cr-release-packages
 
       - name: Debug Helm Packages
-        run: pwd && ls -la .cr-release-packages
+        run: |
+          echo "Checking Helm Packages..."
+          ls -la .cr-release-packages
+          ls -la .cr-release-packages/*.tgz || echo "No .tgz files found!"
 
       - name: Save Helm Packages as Artifact
         uses: actions/upload-artifact@v4.6.1
         with:
           name: helm-packages
-          path: /home/runner/work/simple-helm-template/simple-helm-template/.cr-release-packages/**
+          path: .cr-release-packages/*.tgz
           retention-days: 1
+          include-hidden-files: true
 
       - name: Upload Helm Charts to GitHub Releases
         env:
