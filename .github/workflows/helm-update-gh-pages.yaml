@@ -60,7 +60,7 @@ jobs:
 
           echo "Chart Releaser installed successfully:"
           cr version
-    
+
       - name: Run Chart Releaser Index
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -72,7 +72,7 @@ jobs:
             --index-path . \
             --token "${{ secrets.GITHUB_TOKEN }}" \
             --push
-  
+
       - name: Commit and push changes
         run: |
           echo "Checking if index.yaml has changed..."
@@ -82,6 +82,6 @@ jobs:
             exit 0
           fi
           echo "Changes detected in index.yaml"
-          git add index.yaml *.tgz
+          git add index.yaml .cr-release-packages/*.tgz
           git commit -m "Update Helm repo index"
           git push origin gh-pages

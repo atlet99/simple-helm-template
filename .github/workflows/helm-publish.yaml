@@ -26,25 +26,62 @@ jobs:
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
 
-      - name: Set up Helm
+      - name: Install Helm
         uses: azure/setup-helm@v4.3.0
         with:
           version: v3.17.0
 
-      - name: Run chart-releaser
-        uses: helm/chart-releaser-action@v1.7.0
-        with:
-          charts_dir: charts
-          skip_existing: true
+      - name: Install Chart Releaser
+        run: |
+          ARCH=$(uname -m)
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          CR_VERSION=$(curl -s https://api.github.com/repos/helm/chart-releaser/releases/latest | jq -r '.tag_name' | sed 's/^v//')
+
+          if [[ "$ARCH" == "x86_64" ]]; then ARCH="amd64"; fi
+          if [[ "$ARCH" == "aarch64" ]]; then ARCH="arm64"; fi
+
+          CR_BINARY="chart-releaser_${CR_VERSION}_${OS}_${ARCH}.tar.gz"
+          DOWNLOAD_URL="https://github.com/helm/chart-releaser/releases/download/v${CR_VERSION}/${CR_BINARY}"
+
+          echo "Downloading Chart Releaser from $DOWNLOAD_URL"
+          curl -fsSL -o cr.tar.gz -L "$DOWNLOAD_URL" || { echo "Failed to download"; exit 1; }
+
+          echo "Extracting Chart Releaser..."
+          tar -xzf cr.tar.gz || { echo "Failed to extract"; exit 1; }
+
+          echo "Moving binary to /usr/local/bin"
+          chmod +x cr
+          sudo mv cr /usr/local/bin/cr
+
+          echo "Cleaning up..."
+          rm -rf cr.tar.gz LICENSE README.md
+
+          echo "Chart Releaser installed successfully:"
+          cr version
+
+      - name: Package Helm Charts
+        run: |
+          mkdir -p .cr-release-packages
+          cr package charts/default-app --package-path .cr-release-packages
+
+      - name: Debug Helm Packages
+        run: ls -la .cr-release-packages
+
+      - name: Upload Helm Charts to GitHub Releases
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-          CR_GENERATE_RELEASE_NOTES: true
+        run: |
+          cr upload --owner "${{ github.repository_owner }}" \
+            --git-repo "$(basename ${{ github.repository }})" \
+            --token "${{ secrets.GITHUB_TOKEN }}" \
+            --package-path .cr-release-packages \
+            --push --skip-existing --packages-with-index
 
       - name: Save Helm Packages as Artifact
         uses: actions/upload-artifact@v4
         with:
           name: helm-packages
-          path: .cr-release-packages/*.tgz
+          path: .cr-release-packages/
 
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
@@ -53,12 +90,11 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Push charts to GHCR
+      - name: Push Charts to GHCR
         run: |
-          shopt -s nullglob
-          for pkg in .cr-release-packages/*; do
-            if [ -z "${pkg:-}" ]; then
-              break
+          for pkg in .cr-release-packages/*.tgz; do
+            if [[ -f "$pkg" ]]; then
+              echo "Pushing $pkg to GHCR..."
+              helm push "$pkg" "oci://ghcr.io/${{ github.repository_owner }}/charts"
             fi
-            helm push "${pkg}" "oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/charts"
           done
