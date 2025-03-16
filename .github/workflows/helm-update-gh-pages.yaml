@@ -1,0 +1,50 @@
+name: Update Helm Repo Index
+
+on:
+  workflow_run:
+    workflows: ["Release Helm Chart"]
+    types:
+      - completed
+
+jobs:
+  update-index:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Fetch history
+        run: git fetch --prune --unshallow
+
+      - name: Download new Helm package
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-chart-packages
+          path: .cr-release-packages/
+
+      - name: Configure Git
+        run: |
+          git config user.name "${{ github.actor }}"
+          git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v4.3.0
+        with:
+          version: v3.17.0
+
+      - name: Move new chart to repository
+        run: |
+          mv .cr-release-packages/*.tgz .
+      
+      - name: Update Helm repo index
+        run: |
+          helm repo index . --url https://atlet99.github.io/simple-helm-template --merge index.yaml
+
+      - name: Commit and push changes
+        run: |
+          git add .
+          git commit -m "Update Helm repo index"
+          git push origin gh-pages
