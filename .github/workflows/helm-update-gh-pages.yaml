@@ -39,8 +39,8 @@ jobs:
         uses: actions/download-artifact@v4.1.9
         with:
           name: helm-packages
-          path: /home/runner/work/simple-helm-template/simple-helm-template/.cr-release-packages/
-          pattern: "*.tgz"
+          path: .cr-release-packages/
+          merge-multiple: true
           repository: ${{ github.repository }}
           run-id: ${{ env.RUN_ID }}
       
