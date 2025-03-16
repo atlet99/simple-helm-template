@@ -46,8 +46,8 @@ jobs:
           tar -xzf cr.tar.gz || { echo "Failed to extract"; exit 1; }
 
           echo "Moving binary to /usr/local/bin"
-          chmod +x chart-releaser
-          sudo mv chart-releaser /usr/local/bin/cr
+          chmod +x cr
+          sudo mv cr /usr/local/bin/cr
 
           echo "Chart Releaser installed successfully:"
           cr --version
