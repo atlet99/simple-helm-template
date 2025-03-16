@@ -71,7 +71,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.1
         with:
           name: helm-packages
-          path: .cr-release-packages/**
+          path: /home/runner/work/simple-helm-template/simple-helm-template/.cr-release-packages/**
           retention-days: 1
 
       - name: Upload Helm Charts to GitHub Releases
