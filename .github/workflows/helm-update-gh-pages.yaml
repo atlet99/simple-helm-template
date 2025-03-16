@@ -29,17 +29,31 @@ jobs:
 
       - name: Get latest workflow run ID
         id: get_run_id
-        run: |
-            LATEST_RUN_ID=$(gh run list --workflow="Release Helm Chart" --branch=main --json databaseId --jq '.[0].databaseId')
-            echo "RUN_ID=${LATEST_RUN_ID}" >> $GITHUB_ENV
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+              const runs = await github.rest.actions.listWorkflowRuns({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                workflow_id: "helm-publish.yaml",
+                branch: "main",
+                status: "completed",
+                per_page: 1
+              });
+              if (runs.data.workflow_runs.length > 0) {
+                const runId = runs.data.workflow_runs[0].id;
+                core.setOutput("RUN_ID", runId);
+              } else {
+                throw new Error("No completed workflow runs found.");
+              }
 
       - name: Download Helm Packages
         uses: actions/download-artifact@v4.1.9
         with:
           name: helm-packages
           path: .cr-release-packages/
+          run-id: ${{ steps.get_run_id.outputs.RUN_ID }}
 
       - name: Display Helm Packages
         run: ls -R .cr-release-packages/
