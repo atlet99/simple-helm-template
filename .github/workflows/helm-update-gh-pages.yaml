@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout gh-pages branch
+      - name: Checkout main branch
         uses: actions/checkout@v4
         with:
-          ref: gh-pages
+          ref: main
 
       - name: Fetch history
         run: git fetch --prune --unshallow
@@ -55,11 +55,35 @@ jobs:
           echo "Chart Releaser installed successfully:"
           cr version
 
+      - name: Package Helm Charts
+        run: |
+          mkdir -p .cr-release-packages
+          cr package --package-path .cr-release-packages
+
+      - name: Upload Helm Chart to GitHub Releases
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+        run: |
+          cr upload --owner "${{ github.repository_owner }}" \
+            --git-repo "$(basename ${{ github.repository }})" \
+            --token "${{ secrets.GITHUB_TOKEN }}" \
+            --package-path .cr-release-packages \
+            --push --skip-existing --packages-with-index
+
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+    
       - name: Run Chart Releaser Index
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
-          cr index --owner "${{ github.repository_owner }}" --git-repo "$(basename ${{ github.repository }})" --packages-with-index --index-path . --token "${{ secrets.GITHUB_TOKEN }}" --push
+          cr index --owner "${{ github.repository_owner }}" \
+            --git-repo "$(basename ${{ github.repository }})" \
+            --packages-with-index --index-path . \
+            --token "${{ secrets.GITHUB_TOKEN }}" \
+            --push
 
       - name: Commit and push changes
         run: |
