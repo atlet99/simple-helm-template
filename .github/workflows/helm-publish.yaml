@@ -74,7 +74,7 @@ jobs:
         uses: actions/upload-artifact@v4.6.1
         with:
           name: helm-packages
-          path: .cr-release-packages/*.tgz
+          path: .cr-release-packages/
           retention-days: 1
           include-hidden-files: true
 
