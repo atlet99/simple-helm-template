@@ -29,8 +29,17 @@ jobs:
 
       - name: Install Chart Releaser
         run: |
-          curl -sSL -o /usr/local/bin/cr https://github.com/helm/chart-releaser/releases/latest/download/chart-releaser_$(uname -s)_$(uname -m)
-          chmod +x /usr/local/bin/cr
+          ARCH=$(uname -m)
+          OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+          CR_VERSION=$(curl -s https://api.github.com/repos/helm/chart-releaser/releases/latest | grep '"tag_name"' | cut -d '"' -f 4)
+          CR_BINARY="chart-releaser_${OS}_${ARCH}"
+          
+          curl -sSL -o cr.tar.gz "https://github.com/helm/chart-releaser/releases/download/${CR_VERSION}/${CR_BINARY}.tar.gz"
+          tar -xzf cr.tar.gz
+          chmod +x cr
+          sudo mv cr /usr/local/bin/
+          
+          cr --version
 
       - name: Run Chart Releaser Index
         env:
