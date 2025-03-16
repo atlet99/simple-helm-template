@@ -68,10 +68,10 @@ jobs:
         run: pwd && ls -la .cr-release-packages
 
       - name: Save Helm Packages as Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v4.6.1
         with:
           name: helm-packages
-          path: .cr-release-packages
+          path: .cr-release-packages/**
           retention-days: 1
 
       - name: Upload Helm Charts to GitHub Releases
