@@ -33,14 +33,23 @@ jobs:
           OS=$(uname -s | tr '[:upper:]' '[:lower:]')
           CR_VERSION=$(curl -s https://api.github.com/repos/helm/chart-releaser/releases/latest | jq -r '.tag_name')
 
+          if [[ "$ARCH" == "x86_64" ]]; then ARCH="amd64"; fi
+          if [[ "$ARCH" == "aarch64" ]]; then ARCH="arm64"; fi
+
           CR_BINARY="chart-releaser_${CR_VERSION}_${OS}_${ARCH}.tar.gz"
           DOWNLOAD_URL="https://github.com/helm/chart-releaser/releases/download/${CR_VERSION}/${CR_BINARY}"
 
           echo "Downloading Chart Releaser from $DOWNLOAD_URL"
-          curl -fsSL -o cr.tar.gz "$DOWNLOAD_URL" || { echo "Failed to download"; exit 1; }
-          tar -xzf cr.tar.gz || { echo "Failed to extract"; exit 1; }
+          if ! curl --head --fail --silent "$DOWNLOAD_URL"; then
+            echo "Error: The requested file does not exist at $DOWNLOAD_URL"
+            exit 1
+          fi
+          
+          curl -fsSL -o cr.tar.gz "$DOWNLOAD_URL"
+          tar -xzf cr.tar.gz
           chmod +x chart-releaser
           sudo mv chart-releaser /usr/local/bin/cr
+
           echo "Chart Releaser installed successfully:"
           cr --version
 
