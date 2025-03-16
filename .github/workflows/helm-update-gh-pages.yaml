@@ -37,7 +37,7 @@ jobs:
           if [[ "$ARCH" == "aarch64" ]]; then ARCH="arm64"; fi
 
           CR_BINARY="chart-releaser_${CR_VERSION}_${OS}_${ARCH}.tar.gz"
-          DOWNLOAD_URL="https://github.com/helm/chart-releaser/releases/download/${CR_VERSION}/${CR_BINARY}"
+          DOWNLOAD_URL="https://github.com/helm/chart-releaser/releases/download/v${CR_VERSION}/${CR_BINARY}"
 
           echo "Downloading Chart Releaser from $DOWNLOAD_URL"
           if ! curl --head --fail --silent "$DOWNLOAD_URL"; then
