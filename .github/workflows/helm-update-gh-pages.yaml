@@ -14,10 +14,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout main branch
+      - name: Checkout gh-pages branch
         uses: actions/checkout@v4
         with:
-          ref: main
+          ref: gh-pages
 
       - name: Fetch history
         run: git fetch --prune --unshallow
@@ -26,6 +26,12 @@ jobs:
         run: |
           git config user.name "${{ github.actor }}"
           git config user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Download Helm Packages
+        uses: actions/download-artifact@v4
+        with:
+          name: helm-packages
+          path: .cr-release-packages
 
       - name: Install Chart Releaser
         run: |
@@ -54,26 +60,6 @@ jobs:
 
           echo "Chart Releaser installed successfully:"
           cr version
-
-      - name: Package Helm Charts
-        run: |
-          mkdir -p .cr-release-packages
-          cr package --package-path .cr-release-packages
-
-      - name: Upload Helm Chart to GitHub Releases
-        env:
-          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
-        run: |
-          cr upload --owner "${{ github.repository_owner }}" \
-            --git-repo "$(basename ${{ github.repository }})" \
-            --token "${{ secrets.GITHUB_TOKEN }}" \
-            --package-path .cr-release-packages \
-            --push --skip-existing --packages-with-index
-
-      - name: Checkout gh-pages branch
-        uses: actions/checkout@v4
-        with:
-          ref: gh-pages
     
       - name: Run Chart Releaser Index
         env:
@@ -81,10 +67,12 @@ jobs:
         run: |
           cr index --owner "${{ github.repository_owner }}" \
             --git-repo "$(basename ${{ github.repository }})" \
-            --packages-with-index --index-path . \
+            --package-path .cr-release-packages \
+            --packages-with-index \
+            --index-path . \
             --token "${{ secrets.GITHUB_TOKEN }}" \
             --push
-
+  
       - name: Commit and push changes
         run: |
           echo "Checking if index.yaml has changed..."
