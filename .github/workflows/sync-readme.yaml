@@ -14,16 +14,16 @@ jobs:
             contents: write
         runs-on: ubuntu-latest
         steps:
-            - name: Configure Git
-              run: |
-                git config user.name "${{ github.actor }}"
-                git config user.email "${{ github.actor }}@users.noreply.github.com"
             - uses: actions/checkout@v4
             - run: |
                 cp -f README.md ${{ runner.temp }}/README.md
             - uses: actions/checkout@v4
               with:
                 ref: gh-pages
+            - name: Configure Git
+              run: |
+                git config user.name "${{ github.actor }}"
+                git config user.email "${{ github.actor }}@users.noreply.github.com"
             - run: |
                 cp -f ${{ runner.temp }}/README.md README.md
                 git add README.md
