@@ -18,6 +18,7 @@ on:
 
 jobs:
     build:
+        continue-on-error: false
         permissions:
             contents: write
         runs-on: ubuntu-latest
@@ -35,6 +36,6 @@ jobs:
             - run: |
                 cp -f ${{ runner.temp }}/README.md README.md
                 git add README.md
-                git commit --signoff -m "Sync README.md from main"
-                git push
+                git commit --signoff -m "Sync README.md from main" || { echo "No changes to commit"; exit 1; }
+                git push || { echo "Git push failed or nothing to change"; exit 1; }
 
