@@ -5,16 +5,16 @@ metadata:
   name: {{ include "default-app.fullname" . }}
   namespace: {{ include "default-app.namespace" . }}
   labels:
-    {{- include "default-app.labels" . | nindent 4 }}
+    {{- include "default-app.labels" . | nindent 8 }}
   annotations:
-    {{- include "default-app.annotations" . | nindent 4 }}
+    {{- include "default-app.annotations" . | nindent 8 }}
 spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount | default 1 }}
   {{- end }}
   selector:
     matchLabels:
-      {{- include "default-app.selectorLabels" . | nindent 6 }}
+      {{- include "default-app.selectorLabels" . | nindent 8 }}
   template:
     metadata:
       labels:

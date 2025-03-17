@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.9 (2025-03-17)
+* [default-app] - removed chartVersion from all labels and annotations due GitOps issues; fix annotations/labels nindent length; 
+
 ## 0.2.8 (2025-03-17)
 * [default-app] - fix spaces for volumeAttributes; removed chartVersion from selectors;
 

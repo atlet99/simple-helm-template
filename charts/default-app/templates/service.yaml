@@ -5,7 +5,7 @@ metadata:
   name: "{{ include "default-app.fullname" . }}-svc"
   namespace: {{ include "default-app.namespace" . }}
   labels:
-    {{- include "default-app.labels" . | nindent 4 }}
+    {{- include "default-app.labels" . | nindent 8 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

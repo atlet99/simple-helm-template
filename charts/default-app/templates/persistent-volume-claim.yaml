@@ -6,10 +6,10 @@ metadata:
   name: {{ .name }}
   namespace: {{ include "default-app.namespace" $ }}
   labels:
-    {{- include "default-app.labels" $ | nindent 4 }}
+    {{- include "default-app.labels" $ | nindent 8 }}
   {{- with .annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
+    {{- toYaml . | nindent 8 }}
   {{- end }}
 spec:
   accessModes:

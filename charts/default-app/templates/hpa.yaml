@@ -5,7 +5,7 @@ metadata:
   name: "{{ include "default-app.fullname" . }}-hpa"
   namespace: {{ include "default-app.namespace" . }}
   labels:
-    {{- include "default-app.labels" . | nindent 4 }}
+    {{- include "default-app.labels" . | nindent 8 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
