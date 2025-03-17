@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  actions: read
 
 jobs:
   update-index:
@@ -67,10 +68,30 @@ jobs:
 
             core.setOutput("RUN_ID", successfulRun.id);
 
+      - name: List available artifacts
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              run_id: ${{ env.RUN_ID }}
+            });
+      
+            if (artifacts.data.artifacts.length === 0) {
+              throw new Error("No artifacts found for this workflow run.");
+            }
+      
+            console.log("Available artifacts:");
+            for (const artifact of artifacts.data.artifacts) {
+              console.log(`- ${artifact.name}`);
+            }
+
       - name: Download Helm Packages
         uses: actions/download-artifact@v4.1.9
         with:
-          name: helm-packages
+          pattern: "helm-packages"
           path: .cr-release-packages/
           run-id: ${{ steps.get_run_id.outputs.RUN_ID }}
           repository: ${{ github.repository }}
