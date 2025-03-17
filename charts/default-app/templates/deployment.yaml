@@ -56,7 +56,7 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.configs .Values.secrets .Values.externalSecrets }}
+          {{- if or .Values.configs .Values.secrets .Values.externalSecrets .Values.existingSecrets .Values.existingConfigs }}
           envFrom:
             {{- range .Values.configs }}
             {{- if and .enabled .useEnvFrom (not .mountPath) }}
@@ -76,8 +76,20 @@ spec:
                 name: "{{ .name }}"
             {{- end }}
             {{- end }}
+            {{- range .Values.existingSecrets }}
+            {{- if and .enabled .envFrom (not .mountPath) }}
+            - secretRef:
+                name: "{{ .name }}"
+            {{- end }}
+            {{- end }}
+            {{- range .Values.existingConfigs }}
+            {{- if and .enabled .useEnvFrom (not .mountPath) }}
+            - configMapRef:
+                name: "{{ .name }}"
+            {{- end }}
+            {{- end }}
           {{- end }}
-          {{- if or .Values.configs .Values.secrets .Values.externalSecrets }}
+          {{- if or .Values.configs .Values.secrets .Values.externalSecrets .Values.existingConfigs .Values.existingSecrets }}
           env:
             {{- range .Values.externalSecrets }}
             {{- if and .enabled (not .mountPath) }}
@@ -146,6 +158,32 @@ spec:
                 fieldRef:
                   apiVersion: v1
                   fieldPath: "{{ $fieldPath }}"
+            {{- end }}
+            {{- end }}
+            {{- range .Values.existingSecrets }}
+            {{- if .enabled (not .mountPath) }}
+            {{- $secretName := .name }}
+            {{- range .envVars }}
+            - name: "{{ .envName }}"
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ $secretName }}"
+                  key: "{{ .key }}"
+                  optional: {{ .optional | default true }}
+            {{- end }}
+            {{- end }}
+            {{- end }}
+            {{- range .Values.existingConfigs }}
+            {{- if .enabled (not .mountPath) }}
+            {{- $configName := .name }}
+            {{- range .envVars }}
+            - name: "{{ .envName }}"
+              valueFrom:
+                configMapKeyRef:
+                  name: "{{ $configName }}"
+                  key: "{{ .key }}"
+                  optional: {{ .optional | default true }}
+            {{- end }}
             {{- end }}
             {{- end }}
           {{- end }}

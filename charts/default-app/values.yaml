@@ -205,6 +205,34 @@ resources: {}
 #       }
 configs: {}
 
+# This is to setup the existing config maps for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/configmap/
+# example:
+# existingConfigs:
+#   - name: "app-config"
+#     enabled: true
+#     namespace: "special-namespace"
+#     mountPath: "/config/app"
+#     subPath: "app-config.yaml"
+#     readOnly: true
+#   - name: "db-config-with-env-from"
+#     enabled: true
+#     namespace: "special-namespace"
+#     useEnvFrom: true
+#     data:
+#       APP_ENV: "development"
+#       APP_LOG_LEVEL: "info"
+#   - name: "db-config-with-env"
+#     enabled: true
+#     namespace: "special-namespace"
+#     envVars:
+#       - envName: "USER_CONFIG_PARAMS"
+#         key: "changeme"
+#         optional: true
+#       - envName: "API_VERSION"
+#         key: "v3"
+#         optional: false
+existingConfigs: {}
+
 # This is to setup the secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
 # example:
 # secrets:
@@ -287,6 +315,36 @@ configs: {}
 #         }
 #       }
 secrets: {}
+
+# This is to setup the existing secrets for variables more information can be found here: https://kubernetes.io/docs/concepts/configuration/secret/
+# example:
+# existingSecrets:
+#   - name: "app-secret"
+#     enabled: true
+#     namespace: "special-namespace"
+#     mountPath: "/secret/app"
+#     subPath: "app-secret.env"
+#     readOnly: true
+#   - name: "db-secret-with-env-from"
+#     enabled: true
+#     namespace: "special-namespace"
+#     readOnly: false
+#     envFrom: true
+#     data:
+#       DB_USER: "postgres"
+#       DB_PASS: "pass123"
+#   - name: "db-secret-with-env"
+#     enabled: true
+#     namespace: "special-namespace"
+#     readOnly: false
+#     envVars:
+#       - envName: "USER_CONFIG_PARAMS"
+#         key: "changeme"
+#         optional: true
+#       - envName: "API_VERSION"
+#         key: "v3"
+#         optional: false
+existingSecrets: {}
 
 # This is to setup the external secrets for variables more information can be found here: https://github.com/external-secrets/external-secrets
 # example:
@@ -444,6 +502,36 @@ persistent:
   pv:
     enabled: false
     volumes:
+      - name: "translate-s3-back-pv"
+        size: 10Gi
+        accessModes:
+          - ReadWriteMany
+        storageClass: "csi-s3"
+        namespace: "special-ns"
+        reclaimPolicy: "Retain"
+        volumeMode: {}
+        nodeAffinity: []
+        annotations:
+          description: "This is a custom PV for the translate-s3-back"
+        claimRef:
+          name: "special-claim"
+          namespace: "special-ns"
+        csi:
+          driver: "ru.yandex.s3.csi"
+          volumeHandle: "translate-s3-back"
+          volumeAttributes:
+            capacity: "1Gi"
+            mounter: "geesefs"
+            options: "--memory-limit=256 --dir-mode=0644 --file-mode=0644 --uid=1000 --gid=1000"
+          controllerPublishSecretRef:
+            name: "s3-secret"
+            namespace: "secret-ns"
+          nodePublishSecretRef:
+            name: "s3-secret-node-publish"
+            namespace: "secret-ns"
+          nodeStageSecretRef:
+            name: "s3-secret-node-stage"
+            namespace: "secret-ns"
       - name: "custom-pv"
         size: 10Gi
         accessModes:
@@ -453,11 +541,13 @@ persistent:
         volumeMode: "Filesystem"
         nodeAffinity: []
         annotations: {}
+        claimRef: {}
       - name: "custom-pv-2"
         size: 5Gi
         accessModes:
           - ReadWriteMany
         storageClass: "manual"
+        claimRef: {}
         reclaimPolicy: "Retain"
         volumeMode: "Filesystem"
         nodeAffinity: []

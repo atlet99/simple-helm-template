@@ -24,7 +24,7 @@ helm install my-app simple-chart/default-app -f values.yaml
 To install the application with a specific version:
 
 ```sh
-helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.2.4 --atomic
+helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.2.5 --atomic
 ```
 
 ## Checking
@@ -38,7 +38,7 @@ helm search repo simple-chart/default-app --versions
 Verify the chart archive download:
 
 ```sh
-helm pull simple-chart/default-app --version 0.2.4
+helm pull simple-chart/default-app --version 0.2.5
 ```
 
 ## Upgrading
@@ -114,25 +114,59 @@ env:
 
 ## Persistent Storage
 
-This Chart supports persistent storage configuration:
+This Chart supports persistent storage configuration, including manually specified Persistent Volumes (PVs) and Persistent Volume Claims (PVCs):
 
 ```yaml
 persistent:
   pv:
     enabled: true
     volumes:
-      - name: "pv1"
+      - name: "translate-s3-back-pv"
         size: 10Gi
-        storageClass: "manual"
-        hostPath: "/mnt/storage1"
+        accessModes:
+          - ReadWriteMany
+        storageClass: "csi-s3"
+        reclaimPolicy: "Retain"
         annotations:
-          storage.kubernetes.io/description: "Persistent storage for main app"
-      - name: "pv2"
-        size: 5Gi
+          description: "This is a custom PV for the translate-s3-back"
+        claimRef:
+          name: "special-claim"
+          namespace: "special-ns"
+        csi:
+          driver: "ru.yandex.s3.csi"
+          volumeHandle: "translate-s3-back"
+          volumeAttributes:
+            capacity: "1Gi"
+            mounter: "geesefs"
+            options: "--memory-limit=256 --dir-mode=0644 --file-mode=0644 --uid=1000 --gid=1000"
+          controllerPublishSecretRef:
+            name: "s3-secret"
+            namespace: "secret-ns"
+          nodePublishSecretRef:
+            name: "s3-secret-node-publish"
+            namespace: "secret-ns"
+          nodeStageSecretRef:
+            name: "s3-secret-node-stage"
+            namespace: "secret-ns"
+      - name: "custom-pv"
+        size: 10Gi
+        accessModes:
+          - ReadWriteOnce
         storageClass: "manual"
-        hostPath: "/mnt/storage2"
+        reclaimPolicy: "Retain"
+        volumeMode: "Filesystem"
+        annotations: {}
+        claimRef: {}
+      - name: "custom-pv-2"
+        size: 5Gi
+        accessModes:
+          - ReadWriteMany
+        storageClass: "manual"
+        reclaimPolicy: "Retain"
+        volumeMode: "Filesystem"
+        annotations: {}
   pvc:
-    enabled: true
+    enabled: false
     claims:
       - name: "custom-pvc"
         size: 10Gi
@@ -141,13 +175,42 @@ persistent:
           - ReadWriteOnce
         mountPath: "/custom-path"
         readOnly: false
-      - name: "custom-pvc-2"
-        size: 10Gi
-        storageClass: "manual"
-        accessModes:
-          - ReadWriteMany
-        mountPath: "/custom-path-2"
-        readOnly: false
+```
+
+## Using Existing ConfigMaps
+
+If you have pre-existing ConfigMaps in your cluster, you can use them instead of defining new ones:
+
+```yaml
+existingConfigs:
+  - name: "app-config"
+    enabled: true
+    namespace: "default"
+    mountPath: "/config/app"
+    subPath: "app-config.yaml"
+    readOnly: true
+  - name: "db-config"
+    enabled: true
+    namespace: "default"
+    useEnvFrom: true
+```
+
+## Using Existing Secrets
+
+Similarly, you can reference existing Kubernetes Secrets:
+
+```yaml
+existingSecrets:
+  - name: "app-secret"
+    enabled: true
+    namespace: "default"
+    mountPath: "/secret/app"
+    subPath: "app-secret.env"
+    readOnly: true
+  - name: "db-secret"
+    enabled: true
+    namespace: "default"
+    envFrom: true
 ```
 
 ## Pod Disruption Budget

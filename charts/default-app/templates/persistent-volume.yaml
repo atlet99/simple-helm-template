@@ -11,30 +11,72 @@ metadata:
         {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
-    capacity:
-        storage: {{ .size }}
-    {{- if .volumeMode }}
-    volumeMode: {{ .volumeMode }}
-    {{- end }}
-    accessModes:
-        {{- toYaml .accessModes | nindent 2 }}
-    persistentVolumeReclaimPolicy: {{ .reclaimPolicy }}
-    {{- if .storageClass }}
-    storageClassName: {{ .storageClass }}
-    {{- end }}
-    {{- if .nodeAffinity }}
-    nodeAffinity:
-        required:
-        nodeSelectorTerms:
-            - matchExpressions:
-                - key: kubernetes.io/hostname
+  capacity:
+    storage: {{ .size }}
+  {{- if .volumeMode }}
+  volumeMode: {{ .volumeMode }}
+  {{- end }}
+  accessModes:
+      {{- toYaml .accessModes | nindent 4 }}
+  {{- if .reclaimPolicy }}
+  persistentVolumeReclaimPolicy: {{ .reclaimPolicy }}
+  {{- end }}
+  {{- if .storageClass }}
+  storageClassName: {{ .storageClass }}
+  {{- end }}
+  {{- if and .claimRef (not (empty .claimRef)) }}
+  claimRef:
+      {{- if .claimRef.name }}
+      name: {{ .claimRef.name }}
+      {{- end }}
+      {{- if .claimRef.namespace }}
+      namespace: {{ .claimRef.namespace }}
+      {{- end }}
+      {{- if .claimRef.uid }}
+      uid: {{ .claimRef.uid }}
+      {{- end }}
+  {{- end }}
+  {{- if .nodeAffinity }}
+  nodeAffinity:
+      required:
+          nodeSelectorTerms:
+          - matchExpressions:
+              - key: kubernetes.io/hostname
                 operator: In
                 values:
-                    {{- toYaml .nodeAffinity | nindent 16 }}
-    {{- end }}
-    {{- if .hostPath}}
-    hostPath:
-        path: {{ .hostPath}}
-    {{- end }}
+                  {{- toYaml .nodeAffinity | nindent 16 }}
+  {{- end }}
+  {{- if .hostPath}}
+  hostPath:
+      path: {{ .hostPath}}
+  {{- end }}
+  {{- if .csi }}
+  csi:
+      driver: {{ .csi.driver }}
+      volumeHandle: {{ .csi.volumeHandle | quote }}
+      {{- if .csi.volumeAttributes }}
+      volumeAttributes:
+          {{- toYaml .csi.volumeAttributes | nindent 6 }}
+      {{- end }}
+      {{- if .csi.controllerPublishSecretRef }}
+      controllerPublishSecretRef:
+          name: {{ .csi.controllerPublishSecretRef.name }}
+          namespace: {{ .csi.controllerPublishSecretRef.namespace }}
+      {{- end }}
+      {{- if .csi.controllerExpandSecretRef }}
+      controllerExpandSecretRef:
+          name: {{ .csi.controllerExpandSecretRef.name }}
+      {{- end }}
+      {{- if .csi.nodePublishSecretRef }}
+      nodePublishSecretRef:
+          name: {{ .csi.nodePublishSecretRef.name }}
+          namespace: {{ .csi.nodePublishSecretRef.namespace }}
+      {{- end }}
+      {{- if .csi.nodeStageSecretRef }}
+      nodeStageSecretRef:
+          name: {{ .csi.nodeStageSecretRef.name }}
+          namespace: {{ .csi.nodeStageSecretRef.namespace }}
+      {{- end }}
+  {{- end }}
 {{- end }}
 {{- end }}
