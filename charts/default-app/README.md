@@ -1,6 +1,6 @@
 # Default App Helm Chart
 
-![Publish Charts](https://github.com/atlet99/simple-helm-template/blob/main/.github/workflows/helm-publish.yaml/badge.svg?branch=main) ![Repo Updates](https://github.com/atlet99/simple-helm-template/blob/main/.github/workflows/helm-update-gh-pages.yaml/badge.svg?branch=main) [![Releases downloads](https://img.shields.io/github/downloads/atlet99/simple-helm-template/total.svg)](https://github.com/atlet99/simple-helm-template/releases)
+![Publish Charts](https://github.com/atlet99/simple-helm-template/actions/workflows/helm-publish.yaml/badge.svg?branch=main) ![Repo Updates](https://github.com/atlet99/simple-helm-template/actions/workflows/helm-update-gh-pages.yaml/badge.svg?branch=main) [![Releases downloads](https://img.shields.io/github/downloads/atlet99/simple-helm-template/total.svg)](https://github.com/atlet99/simple-helm-template/releases)
 
 This Helm Chart is designed to deploy applications in Kubernetes, providing a standardized structure and flexible configuration options.
 
