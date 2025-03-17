@@ -21,7 +21,7 @@ helm install my-app simple-chart/default-app -f values.yaml
 
 To install the application with specific version:
 ```sh
-helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.2.2 --atomic
+helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.2.4 --atomic
 ```
 
 ## Checking
@@ -33,7 +33,7 @@ helm search repo simple-chart/default-app --versions
 
 Verify the chart archive download:
 ```sh
-helm pull simple-chart/default-app --version 0.2.2
+helm pull simple-chart/default-app --version 0.2.4
 ```
 
 ## Upgrading
@@ -113,15 +113,36 @@ This Chart supports persistent storage configuration:
 
 ```yaml
 persistent:
-  enabled: true
+  pv:
+    enabled: true
+    volumes:
+      - name: "pv1"
+        size: 10Gi
+        storageClass: "manual"
+        hostPath: "/mnt/storage1"
+        annotations:
+          storage.kubernetes.io/description: "Persistent storage for main app"
+      - name: "pv2"
+        size: 5Gi
+        storageClass: "manual"
+        hostPath: "/mnt/storage2"
   pvc:
-    name: "custom-pvc"
-    size: 10Gi
-    storageClass: "fast-storage"
-    accessModes:
-      - ReadWriteMany
-  mountPath: "/data"
-  readOnly: false
+    enabled: true
+    claims:
+      - name: "custom-pvc"
+        size: 10Gi
+        storageClass: "manual"
+        accessModes:
+          - ReadWriteOnce
+        mountPath: "/custom-path"
+        readOnly: false
+      - name: "custom-pvc-2"
+        size: 10Gi
+        storageClass: "manual"
+        accessModes:
+          - ReadWriteMany
+        mountPath: "/custom-path-2"
+        readOnly: false
 ```
 
 ## Pod Disruption Budget
@@ -246,4 +267,3 @@ terminationGracePeriodSeconds: 30
 ## License
 
 This Helm Chart is distributed under the [MIT](LICENSE) License.
-
