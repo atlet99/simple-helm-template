@@ -1,27 +1,31 @@
 {{- if .Values.persistent.pvc.enabled }}
+{{- range .Values.persistent.pvc.claims }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
-  namespace: {{ include "default-app.namespace" . }}
+  name: {{ .name }}
+  namespace: {{ include "default-app.namespace" $ }}
   labels:
-    {{- include "default-app.labels" . | nindent 4 }}
-  {{- with .Values.persistent.pvc.annotations }}
+    {{- include "default-app.labels" $ | nindent 4 }}
+  {{- with .annotations }}
   annotations:
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
   accessModes:
-    {{- toYaml .Values.persistent.pvc.accessModes | nindent 2 | default "ReadWriteOnce" }}
-  {{- if .Values.persistent.pvc.volumeMode }}
-  volumeMode: {{ .Values.persistent.pvc.volumeMode }}
+    {{- toYaml .accessModes | nindent 2 | default "ReadWriteOnce" }}
+  {{- if .volumeMode }}
+  volumeMode: {{ .volumeMode }}
   {{- end }}
   resources:
     requests:
-      storage: {{ .Values.persistent.pvc.size | default "1Gi" }}
-  {{- if .Values.persistent.pvc.storageClass }}
-  storageClassName: {{ .Values.persistent.pvc.storageClass }}
+      storage: {{ .size | default "1Gi" }}
+  {{- if .storageClass }}
+  storageClassName: {{ .storageClass }}
   {{- else if .Values.persistent.pv.enabled }}
-  volumeName: {{ .Values.persistent.pv.name | default (include "default-app.fullname" .) }}
+  {{- range .Values.persistent.pv.volumes }}
+  volumeName: {{ .name }}
   {{- end }}
+  {{- end }}
+{{- end }}
 {{- end }}

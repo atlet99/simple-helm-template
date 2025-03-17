@@ -161,7 +161,7 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          {{- if or .Values.configs .Values.secrets .Values.externalSecrets .Values.persistent.enabled }}
+          {{- if or .Values.configs .Values.secrets .Values.externalSecrets .Values.persistent.pvc.enabled }}
           volumeMounts:
             {{- range .Values.configs }}
             {{- if and .enabled .mountPath }}
@@ -200,9 +200,11 @@ spec:
             {{- end }}
             {{- end }}
             {{- if .Values.persistent.pvc.enabled }}
-            - name: persistent-storage
-              mountPath: {{ .Values.persistent.mountPath | default "/data" }}
-              readOnly: {{ .Values.persistent.readOnly | default false | toString | lower }}
+            {{- range .Values.persistent.pvc.claims }}
+            - name: {{ .name }}
+              mountPath: {{ .mountPath }}
+              readOnly: {{ .readOnly | default false | toString | lower }}
+            {{- end }}
             {{- end }}
           {{- end }}
       {{- if .Values.initContainers }}
@@ -261,9 +263,11 @@ spec:
         {{- end }}
         {{- end }}
         {{- if .Values.persistent.pvc.enabled }}
-        - name: persistent-storage
+        {{- range .Values.persistent.pvc.claims }}
+        - name: {{ .name }}
           persistentVolumeClaim:
-            claimName: {{ .Values.persistent.pvc.name | default (include "default-app.fullname" .) }}
+            claimName: {{ .name }}
+        {{- end }}
         {{- end }}
       {{- end }}
       {{- with .Values.nodeSelector }}

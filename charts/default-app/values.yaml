@@ -439,64 +439,50 @@ autoscaling:
 # This section is for setting up persistent storage more information can be found here: https://kubernetes.io/docs/concepts/storage/persistent-volumes/
 # enabled is a boolean that determines whether the persistent volume is enabled or not.
 # pvc is a dictionary that contains the name and other options for the persistent volume claim.
-# example_1:
-# persistent:
-#   pv:
-#     enabled: false
-#   pvc:
-#     name: "custom-pvc"
-#     size: 10Gi
-#     storageClass: "csi-cinder-ssd-delete"
-#     accessModes:
-#       - ReadWriteMany
-# example_2:
-# persistent:
-#   pv:
-#     enabled: true
-#     name: "custom-pv"
-#     size: 10Gi
-#     storageClass: "manual"
-#     volumeMode: "Filesystem"
-#     accessModes:
-#       - ReadWriteOnce
-#     reclaimPolicy: "Retain"
-#     nodeAffinity: []
-#     hostPath: "/mnt/data"
-#     annotations: {}
-#   pvc:
-#     enabled: true
-#     name: "custom-pvc"
-#     size: 10Gi
-#     storageClass: "manual"
-#     volumeMode: "Filesystem"
-#     accessModes:
-#       - ReadWriteOnce
-#     annotations: {}
-#   mountPath: "/custom-path"
-#   readOnly: false
+# pv is a dictionary that contains the name and other options for the persistent volume.
 persistent:
   pv:
     enabled: false
-    name: "custom-pv"
-    size: 10Gi
-    accessModes:
-      - ReadWriteOnce
-    storageClass: "manual"
-    reclaimPolicy: "Retain"
-    volumeMode: "Filesystem"
-    nodeAffinity: []
-    annotations: {}
+    volumes:
+      - name: "custom-pv"
+        size: 10Gi
+        accessModes:
+          - ReadWriteOnce
+        storageClass: "manual"
+        reclaimPolicy: "Retain"
+        volumeMode: "Filesystem"
+        nodeAffinity: []
+        annotations: {}
+      - name: "custom-pv-2"
+        size: 5Gi
+        accessModes:
+          - ReadWriteMany
+        storageClass: "manual"
+        reclaimPolicy: "Retain"
+        volumeMode: "Filesystem"
+        nodeAffinity: []
+        annotations: {}
   pvc:
     enabled: false
-    name: "custom-pvc"
-    size: 10Gi
-    storageClass: "manual"
-    volumeMode: "Filesystem"
-    accessModes:
-      - ReadWriteOnce
-    annotations: {}
-  mountPath: "/custom-path"
-  readOnly: false
+    claims:
+      - name: "custom-pvc"
+        size: 10Gi
+        storageClass: "manual"
+        volumeMode: "Filesystem"
+        accessModes:
+          - ReadWriteOnce
+        annotations: {}
+        mountPath: "/custom-path"
+        readOnly: false
+      - name: "custom-pvc-2"
+        size: 10Gi
+        storageClass: "manual"
+        volumeMode: "Filesystem"
+        accessModes:
+          - ReadWriteMany
+        annotations: {}
+        mountPath: "/custom-path-2"
+        readOnly: false
 
 # nodeSelector is a dictionary that defines the node selection criteria for the pod.
 # More information can be found here: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/

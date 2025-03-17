@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.4 (2025-03-17)
+* [default-app] - fix deployment conditions for pv/pvc; added list of pv/pvc for multiple volumes;
+
 ## 0.2.3 (2025-03-17)
 * [default-app] - fix ns for secretStoreRef in externalSecrets; upd README; added pv; upd pvc mechanism;
 

@@ -1,27 +1,28 @@
 {{- if .Values.persistent.pv.enabled }}
+{{- range .Values.persistent.pv.volumes }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-    name: {{ .Values.persistent.pv.name | default (include "default-app.fullname" .) }}
+    name: {{ .name }}
     labels:
-        {{- include "default-app.labels" . | nindent 4 }}
-    {{- with .Values.persistent.pv.annotations }}
+        {{- include "default-app.labels" $ | nindent 4 }}
+    {{- with .annotations }}
     annotations:
         {{- toYaml . | nindent 4 }}
     {{- end }}
 spec:
     capacity:
-        storage: {{ .Values.persistent.pv.size | default "1Gi" }}
-    {{- if .Values.persistent.pv.volumeMode }}
-    volumeMode: {{ .Values.persistent.pv.volumeMode }}
+        storage: {{ .size }}
+    {{- if .volumeMode }}
+    volumeMode: {{ .volumeMode }}
     {{- end }}
     accessModes:
-        {{- toYaml .Values.persistent.pv.accessModes | nindent 2 }}
-    persistentVolumeReclaimPolicy: {{ .Values.persistent.pv.reclaimPolicy | default "Retain" }}
-    {{- if .Values.persistent.pv.storageClass }}
-    storageClassName: {{ .Values.persistent.pv.storageClass }}
+        {{- toYaml .accessModes | nindent 2 }}
+    persistentVolumeReclaimPolicy: {{ .reclaimPolicy }}
+    {{- if .storageClass }}
+    storageClassName: {{ .storageClass }}
     {{- end }}
-    {{- if .Values.persistent.pv.nodeAffinity }}
+    {{- if .nodeAffinity }}
     nodeAffinity:
         required:
         nodeSelectorTerms:
@@ -29,10 +30,11 @@ spec:
                 - key: kubernetes.io/hostname
                 operator: In
                 values:
-                    {{- toYaml .Values.persistent.pv.nodeAffinity | nindent 16 }}
+                    {{- toYaml .nodeAffinity | nindent 16 }}
     {{- end }}
-    {{- if .Values.persistent.pv.hostPath}}
+    {{- if .hostPath}}
     hostPath:
-        path: {{ .Values.persistent.pv.hostPath | default "/mnt/data" }}
+        path: {{ .hostPath}}
     {{- end }}
+{{- end }}
 {{- end }}
