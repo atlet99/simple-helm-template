@@ -30,7 +30,7 @@ jobs:
 
       - name: Get Workflow ID
         id: get_workflow_id
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -48,7 +48,7 @@ jobs:
 
       - name: Get latest successful workflow run ID
         id: get_run_id
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
@@ -69,32 +69,31 @@ jobs:
             core.setOutput("RUN_ID", successfulRun.id);
 
       - name: List available artifacts
-        uses: actions/github-script@v6
+        uses: actions/github-script@v7
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
             const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              run_id: ${{ env.RUN_ID }}
+              run_id: ${{ steps.get_run_id.outputs.RUN_ID }}
             });
-      
-            if (artifacts.data.artifacts.length === 0) {
-              throw new Error("No artifacts found for this workflow run.");
-            }
       
             console.log("Available artifacts:");
             for (const artifact of artifacts.data.artifacts) {
               console.log(`- ${artifact.name}`);
             }
 
-      - name: Download Helm Packages
-        uses: actions/download-artifact@v4.1.9
-        with:
-          pattern: "helm-packages"
-          path: .cr-release-packages/
-          run-id: ${{ steps.get_run_id.outputs.RUN_ID }}
-          repository: ${{ github.repository }}
+      - name: Manually Download Helm Packages
+        run: |
+          curl -L \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
+            -o helm-packages.zip \
+            "https://api.github.com/repos/${{ github.repository }}/actions/artifacts/${{ steps.get_run_id.outputs.RUN_ID }}/zip"
+          
+          mkdir -p .cr-release-packages
+          unzip helm-packages.zip -d .cr-release-packages
 
       - name: Display Helm Packages
         run: ls -R .cr-release-packages/
