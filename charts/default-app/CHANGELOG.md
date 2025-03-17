@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.7 (2025-03-17)
+* [default-app] - fix conditions for existingSecrets/existingConfigs in deployment;
+
 ## 0.2.6 (2025-03-17)
 * [default-app] - upgrade pv/pvc conditions;
 

@@ -161,7 +161,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- range .Values.existingSecrets }}
-            {{- if .enabled (not .mountPath) }}
+            {{- if and .enabled (not .mountPath) }}
             {{- $secretName := .name }}
             {{- range .envVars }}
             - name: "{{ .envName }}"
@@ -174,7 +174,7 @@ spec:
             {{- end }}
             {{- end }}
             {{- range .Values.existingConfigs }}
-            {{- if .enabled (not .mountPath) }}
+            {{- if and .enabled (not .mountPath) }}
             {{- $configName := .name }}
             {{- range .envVars }}
             - name: "{{ .envName }}"
