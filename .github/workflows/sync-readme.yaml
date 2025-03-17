@@ -1,3 +1,5 @@
+name: Sync Readme
+
 permissions: {}
 
 on:
@@ -7,6 +9,12 @@ on:
             - main
         paths:
             - README.md
+    workflow_run:
+        workflows:
+            - "Release Helm Chart"
+            - "Update Helm Repo Index"
+        types:
+            - completed
 
 jobs:
     build:
