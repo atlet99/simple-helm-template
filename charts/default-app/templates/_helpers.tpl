@@ -64,7 +64,6 @@ Selector labels for a deployment, service, or ingress
 app.kubernetes.io/name: {{ include "default-app.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name | default "unknown-instance" }}
 app.kubernetes.io/version: {{ .Values.appVersion | quote }}
-helm.sh/chart-version: {{ .Chart.Version | quote }}
 {{- end }}
 
 {{/*

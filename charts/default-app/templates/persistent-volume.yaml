@@ -59,7 +59,7 @@ spec:
       volumeHandle: {{ .csi.volumeHandle | quote }}
       {{- if .csi.volumeAttributes }}
       volumeAttributes:
-          {{- toYaml .csi.volumeAttributes | nindent 6 }}
+          {{- toYaml .csi.volumeAttributes | nindent 12 }}
       {{- end }}
       {{- if .csi.controllerPublishSecretRef }}
       controllerPublishSecretRef:
@@ -81,6 +81,6 @@ spec:
           namespace: {{ .csi.nodeStageSecretRef.namespace }}
       {{- end }}
   {{- end }}
-{{- end }}
-  {{- end }}
     {{- end }}
+  {{- end }}
+{{- end }}

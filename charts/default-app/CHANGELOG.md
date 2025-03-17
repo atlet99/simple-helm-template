@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.8 (2025-03-17)
+* [default-app] - fix spaces for volumeAttributes; removed chartVersion from selectors;
+
 ## 0.2.7 (2025-03-17)
 * [default-app] - fix conditions for existingSecrets/existingConfigs in deployment;
 
