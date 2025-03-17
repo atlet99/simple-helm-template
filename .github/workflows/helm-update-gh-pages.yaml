@@ -145,27 +145,16 @@ jobs:
           echo "Chart Releaser installed successfully:"
           cr version
 
+      - name: Latest Check Helm Packages
+        run: ls -R .cr-release-packages/
+
       - name: Run Chart Releaser Index
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
         run: |
           cr index --owner "${{ github.repository_owner }}" \
             --git-repo "$(basename ${{ github.repository }})" \
-            --package-path .cr-release-packages \
             --packages-with-index \
             --index-path . \
             --token "${{ secrets.GITHUB_TOKEN }}" \
             --push
-
-      - name: Commit and push changes
-        run: |
-          echo "Checking if index.yaml has changed..."
-          git status
-          if git diff --quiet index.yaml; then
-            echo "No changes detected in index.yaml"
-            exit 0
-          fi
-          echo "Changes detected in index.yaml"
-          git add index.yaml .cr-release-packages/*.tgz
-          git commit -m "Update Helm repo index"
-          git push origin gh-pages
