@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.6 (2025-03-17)
+* [default-app] - upgrade pv/pvc conditions;
+
 ## 0.2.5 (2025-03-17)
 * [default-app] - added mechanism for including existed configmaps and secrets via env/envFrom; added extended params for pv via csi and s3 plugins; added new README;
 

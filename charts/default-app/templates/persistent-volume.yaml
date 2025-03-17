@@ -1,5 +1,6 @@
-{{- if .Values.persistent.pv.enabled }}
-{{- range .Values.persistent.pv.volumes }}
+{{- if and (.Values.persistent | default dict) (.Values.persistent.pv | default dict) (.Values.persistent.pv.enabled | default false) }}
+  {{- range .Values.persistent.pv.volumes }}
+    {{- if .enabled | default true }}
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -12,12 +13,12 @@ metadata:
     {{- end }}
 spec:
   capacity:
-    storage: {{ .size }}
+    storage: {{ .size | default "1Gi" }}
   {{- if .volumeMode }}
   volumeMode: {{ .volumeMode }}
   {{- end }}
   accessModes:
-      {{- toYaml .accessModes | nindent 4 }}
+      {{- .accessModes | default (list "ReadWriteOnce") | toYaml | nindent 4 }}
   {{- if .reclaimPolicy }}
   persistentVolumeReclaimPolicy: {{ .reclaimPolicy }}
   {{- end }}
@@ -41,10 +42,12 @@ spec:
       required:
           nodeSelectorTerms:
           - matchExpressions:
+              {{- if .nodeAffinity }}
               - key: kubernetes.io/hostname
                 operator: In
                 values:
                   {{- toYaml .nodeAffinity | nindent 16 }}
+              {{- end }}
   {{- end }}
   {{- if .hostPath}}
   hostPath:
@@ -79,4 +82,5 @@ spec:
       {{- end }}
   {{- end }}
 {{- end }}
-{{- end }}
+  {{- end }}
+    {{- end }}
