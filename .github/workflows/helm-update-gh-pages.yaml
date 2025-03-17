@@ -38,9 +38,9 @@ jobs:
               repo: context.repo.repo
             });
 
-            const workflow = workflows.data.workflows.find(wf => wf.name === "Release Helm Chart");
+            const workflow = workflows.data.workflows.find(wf => wf.path.endsWith("helm-publish.yaml"));
             if (!workflow) {
-              throw new Error("Workflow 'Release Helm Chart' not found.");
+              throw new Error("Workflow 'helm-publish.yaml' not found.");
             }
 
             core.setOutput("WORKFLOW_ID", workflow.id);
