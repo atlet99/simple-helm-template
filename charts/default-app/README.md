@@ -8,8 +8,10 @@ This Helm Chart is designed to deploy applications in Kubernetes, providing a st
 
 Ensure that Helm is installed and that you have access to a Kubernetes cluster before proceeding with the installation.
 
+Add the Helm repository and update it:
+
 ```sh
-helm repo add simple-chart https://atlet99.github.io/simple-helm-template; \
+helm repo add simple-chart https://atlet99.github.io/simple-helm-template
 helm repo update
 ```
 
@@ -19,7 +21,8 @@ To install the application, run:
 helm install my-app simple-chart/default-app -f values.yaml
 ```
 
-To install the application with specific version:
+To install the application with a specific version:
+
 ```sh
 helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.2.4 --atomic
 ```
@@ -27,11 +30,13 @@ helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 
 ## Checking
 
 Check available versions of the chart:
+
 ```sh
 helm search repo simple-chart/default-app --versions
 ```
 
 Verify the chart archive download:
+
 ```sh
 helm pull simple-chart/default-app --version 0.2.4
 ```
@@ -181,6 +186,7 @@ logging:
 ## External Secrets
 
 This chart supports external secrets using External Secret Operator (ESO):
+
 ```yaml
 externalSecrets:
   enabled: true
@@ -200,6 +206,7 @@ externalSecrets:
 This chart allows you to define ConfigMaps to store environment variables, application configurations, or any required files.
 
 Example ConfigMap configuration:
+
 ```yaml
 configs:
   appConfig:
@@ -224,7 +231,8 @@ configs:
       }
 ```
 
-In the deployment, ConfigMaps can be mounted as files inside the container or used as environment variables.
+In the deployment, ConfigMaps can be mounted as files inside the container or used as environment variables:
+
 ```yaml
 envFrom:
   - configMapRef:
@@ -236,6 +244,7 @@ envFrom:
 This Helm chart supports Kubernetes Secrets to securely manage sensitive information such as API keys, database passwords, and authentication credentials.
 
 Example Secret configuration:
+
 ```yaml
 secrets:
   dbSecret:
@@ -250,6 +259,7 @@ secrets:
 ```
 
 Secrets can also be injected as environment variables:
+
 ```yaml
 envFrom:
   - secretRef:
