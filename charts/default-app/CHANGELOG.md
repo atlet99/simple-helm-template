@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.0 (2025-03-18)
+* [default-app] - fix templateData conditions for ExternalSecrets;
+
 ## 0.2.9 (2025-03-17)
 * [default-app] - removed chartVersion from all labels and annotations due GitOps issues; fix annotations/labels nindent length; 
 
