@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.1 (2025-03-20)
+* [default-app] - enable default configMap/secrets key-value validation before deploying;
+
 ## 0.3.0 (2025-03-18)
 * [default-app] - fix templateData conditions for ExternalSecrets;
 

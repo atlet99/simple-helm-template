@@ -100,7 +100,7 @@ spec:
                 secretKeyRef:
                   name: "{{ $externalSecretName }}"
                   key: "{{ .key }}"
-                  optional: {{ .optional | default true }}
+                  optional: {{ .optional | default false }}
             {{- end }}
             {{- end }}
             {{- end }}
@@ -113,7 +113,7 @@ spec:
                 secretKeyRef:
                   name: "{{ $secretName }}"
                   key: "{{ .key }}"
-                  optional: {{ .optional | default true }}
+                  optional: {{ .optional | default false }}
             {{- end }}
             {{- end }}
             {{- end }}
@@ -126,7 +126,7 @@ spec:
                 configMapKeyRef:
                   name: "{{ $configName }}"
                   key: "{{ .key }}"
-                  optional: {{ .optional | default true }}
+                  optional: {{ .optional | default false }}
             {{- end }}
             {{- end }}
             {{- end }}
@@ -169,7 +169,7 @@ spec:
                 secretKeyRef:
                   name: "{{ $secretName }}"
                   key: "{{ .key }}"
-                  optional: {{ .optional | default true }}
+                  optional: {{ .optional | default false }}
             {{- end }}
             {{- end }}
             {{- end }}
@@ -182,7 +182,7 @@ spec:
                 configMapKeyRef:
                   name: "{{ $configName }}"
                   key: "{{ .key }}"
-                  optional: {{ .optional | default true }}
+                  optional: {{ .optional | default false }}
             {{- end }}
             {{- end }}
             {{- end }}
