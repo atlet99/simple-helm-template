@@ -1,0 +1,26 @@
+{{- if .Values.httpRoute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: HTTPRoute
+metadata:
+  name: {{ .Values.httpRoute.name | default (printf "%s-httproute" (include "default-app.fullname" .)) }}
+  namespace: {{ include "default-app.namespace" . }}
+  labels:
+    {{- include "default-app.labels" . | nindent 6 }}
+  annotations:
+    {{- include "default-app.annotations" . | nindent 6 }}
+spec:
+  {{- if .Values.httpRoute.hostnames }}
+  hostnames:
+{{ toYaml .Values.httpRoute.hostnames | indent 4 }}
+  {{- end }}
+
+  {{- if .Values.httpRoute.parentRefs }}
+  parentRefs:
+{{ toYaml .Values.httpRoute.parentRefs | indent 4 }}
+  {{- end }}
+
+  {{- if .Values.httpRoute.rules }}
+  rules:
+{{ toYaml .Values.httpRoute.rules | indent 4 }}
+  {{- end }}
+{{- end }}

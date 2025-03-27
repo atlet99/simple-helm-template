@@ -473,6 +473,110 @@ readinessProbe: {}
 #         memory: 64Mi
 initContainers: []
 
+# httproute is a Kubernetes object that allows you to define HTTP routes for your application.
+# More information can be found here: https://gateway-api.sigs.k8s.io/api-types/httproute/
+httpRoute:
+  enabled: true
+  # Optional: Custom name for the HTTPRoute resource.
+  # If not set, defaults to "<fullname>-httproute".
+  name: ""
+  # Gateways this route should attach to.
+  parentRefs:
+    - name: my-gateway
+      namespace: default        # Optional: omit for current namespace
+      sectionName: http         # Use sectionName or port, not both
+      # port: 80                # Alternative to sectionName
+  # Optional list of hostnames to match.
+  # If empty or omitted, all hostnames are matched.
+  hostnames:
+    - app.example.com
+  # Rules define how to match requests and route them to backends.
+  # Each rule can contain matches, filters (optional), timeouts (optional), and backendRefs.
+  rules:
+    # Rule 1: Match requests to "/" and route to service on port 80
+    - matches:
+        - path:
+            type: PathPrefix    # Optional: PathPrefix (default), Exact, or RegularExpression
+            value: /
+      backendRefs:
+        - name: ""             # Optional: if blank, resolves to "<fullname>-svc"
+          port: 80
+    # Rule 2: Weighted traffic splitting between two services for "/api"
+    - matches:
+        - path:
+            value: /api
+      backendRefs:
+        - port: 8080           # 90% to default service (fullname-svc)
+          weight: 90
+        - name: my-app-v2      # 10% to canary version
+          port: 8080
+          weight: 10
+    # Rule 3: Match GET requests to /admin with a specific header
+    - matches:
+        - path:
+            value: /admin
+          method: GET
+          headers:
+            - name: x-admin-auth
+              value: true
+      backendRefs:
+        - port: 9090
+    # Rule 4: Default catch-all route (if no matches are provided, matches all)
+    - backendRefs:
+        - port: 8080
+
+# grpcRoute is a Kubernetes object that allows you to define gRPC routes for your application.
+# More information can be found here: https://gateway-api.sigs.k8s.io/api-types/grpcroute/
+grpcRoute:
+  enabled: false
+  # Optional: Custom name for the GRPCRoute resource.
+  # If not set, defaults to "<fullname>-grpcroute".
+  name: ""
+  # Gateways this route should attach to.
+  parentRefs:
+    - name: my-gateway
+      namespace: default        # Optional: omit for current namespace
+      sectionName: grpc         # Use sectionName or port, not both
+      # port: 50051             # Alternative to sectionName
+  # Optional list of hostnames to match.
+  # If empty or omitted, all hostnames are matched.
+  hostnames:
+    - app.example.com
+  # Rules define how to match gRPC requests and route them to backends.
+  # Each rule can contain matches, filters (optional), and backendRefs.
+  rules:
+    - matches:
+        - method:
+            service: com.example.User
+            method: Login
+      backendRefs:
+        - name: ""              # Optional: if blank, resolves to "<fullname>-svc"
+          port: 50051
+    - matches:
+        - method:
+            service: com.example.Things
+            method: DoThing
+      backendRefs:
+        - name: ""              # Optional: if blank, resolves to "<fullname>-svc"
+          port: 50051
+          weight: 90
+        - name: my-app-v2
+          port: 50051
+          weight: 10
+    - matches:
+        - method:
+            service: com.example.Admin
+            method: Access
+          headers:
+            - name: x-admin-auth
+              value: true
+      backendRefs:
+        - name: ""              # Optional: if blank, resolves to "<fullname>-svc"
+          port: 50051
+    - backendRefs:
+        - name: ""              # Optional: if blank, resolves to "<fullname>-svc"
+          port: 50051
+
 # This section is for setting up autoscaling more information can be found here: https://kubernetes.io/docs/concepts/workloads/autoscaling/
 autoscaling:
   enabled: false

@@ -1,0 +1,21 @@
+{{- if .Values.grpcRoute.enabled }}
+apiVersion: gateway.networking.k8s.io/v1
+kind: GRPCRoute
+metadata:
+  name: {{ .Values.grpcRoute.name | default (printf "%s-grpcroute" (include "default-app.fullname" .)) }}
+  labels:
+    {{- include "default-app.labels" . | nindent 6 }}
+spec:
+{{- with .Values.grpcRoute.parentRefs }}
+  parentRefs:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with .Values.grpcRoute.hostnames }}
+  hostnames:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- with .Values.grpcRoute.rules }}
+  rules:
+{{ toYaml . | indent 4 }}
+{{- end }}
+{{- end }}

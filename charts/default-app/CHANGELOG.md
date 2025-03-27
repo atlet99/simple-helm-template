@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.2 (2025-03-27)
+* [default-app] - added httpRoute and grpcRoute for ApiGateway;
+
 ## 0.3.1 (2025-03-20)
 * [default-app] - enable default configMap/secrets key-value validation before deploying;
 
