@@ -1,6 +1,6 @@
 # Default App Helm Chart
 
-![Publish Charts](https://github.com/atlet99/simple-helm-template/actions/workflows/helm-publish.yaml/badge.svg?branch=main) ![Repo Updates](https://github.com/atlet99/simple-helm-template/actions/workflows/helm-update-gh-pages.yaml/badge.svg?branch=main) [![Releases downloads](https://img.shields.io/github/downloads/atlet99/simple-helm-template/total.svg)](https://github.com/atlet99/simple-helm-template/releases)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/atlet99/simple-helm-template/blob/main/LICENSE) ![Publish Charts](https://github.com/atlet99/simple-helm-template/actions/workflows/helm-publish.yaml/badge.svg?branch=main) ![Repo Updates](https://github.com/atlet99/simple-helm-template/actions/workflows/helm-update-gh-pages.yaml/badge.svg?branch=main) [![Releases downloads](https://img.shields.io/github/downloads/atlet99/simple-helm-template/total.svg)](https://github.com/atlet99/simple-helm-template/releases)
 
 This Helm Chart is designed to deploy applications in Kubernetes, providing a standardized structure and flexible configuration options.
 
@@ -24,7 +24,7 @@ helm install my-app simple-chart/default-app -f values.yaml
 To install the application with a specific version:
 
 ```sh
-helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.3.2 --atomic
+helm upgrade --install my-app simple-chart/default-app -f values.yaml --version 0.3.3 --atomic
 ```
 
 ## Checking
@@ -38,7 +38,7 @@ helm search repo simple-chart/default-app --versions
 Verify the chart archive download:
 
 ```sh
-helm pull simple-chart/default-app --version 0.3.2
+helm pull simple-chart/default-app --version 0.3.3
 ```
 
 ## Upgrading
