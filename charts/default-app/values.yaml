@@ -476,7 +476,7 @@ initContainers: []
 # httproute is a Kubernetes object that allows you to define HTTP routes for your application.
 # More information can be found here: https://gateway-api.sigs.k8s.io/api-types/httproute/
 httpRoute:
-  enabled: true
+  enabled: false
   # Optional: Custom name for the HTTPRoute resource.
   # If not set, defaults to "<fullname>-httproute".
   name: ""

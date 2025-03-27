@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.3 (2025-03-27)
+* [default-app] - disable httpRoute by default; upd README;
+
 ## 0.3.2 (2025-03-27)
 * [default-app] - added httpRoute and grpcRoute for ApiGateway;
 
