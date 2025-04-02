@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.4 (2025-04-02)
+* [default-app] - added revisionHistoryLimit parameter with default value 3;
+
 ## 0.3.3 (2025-03-27)
 * [default-app] - disable httpRoute by default; upd README;
 

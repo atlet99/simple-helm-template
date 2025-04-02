@@ -703,3 +703,6 @@ podDisruptionBudget:
 # terminationGracePeriodSeconds is the amount of time the pod has to clean up and shut down before it is killed.
 # More information can be found here: https://kubernetes.io/docs/concepts/workloads/pods/pod/#termination-of-pods
 terminationGracePeriodSeconds: 30
+
+# This is for setting up revisionHistoryLimit more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/#rolling-update-deployment
+revisionHistoryLimit: 3

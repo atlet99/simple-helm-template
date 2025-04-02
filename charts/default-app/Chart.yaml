@@ -1,9 +1,9 @@
 apiVersion: v2
 name: default-app
-description: A Helm chart for Kubernetes
+description: A Helm chart for deploying applications in Kubernetes
 icon: https://raw.githubusercontent.com/atlet99/simple-helm-template/refs/heads/main/icon/atlet99-logo.png
 type: application
 maintainers:
   - name: Abdurakhman Rakhmankulov
     email: abdurakhman.rakhmankulov@gmail.com
-version: 0.3.3
+version: 0.3.4
